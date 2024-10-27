@@ -1,0 +1,27 @@
+.content {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.tests-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.test-card {
+    min-width: 400px;
+}
+
+.test-card:hover {
+    cursor: pointer;
+    box-shadow: #1A1A1A 2px 2px 8px;
+}
+
+.test-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
