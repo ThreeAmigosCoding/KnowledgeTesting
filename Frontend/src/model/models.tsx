@@ -1,7 +1,7 @@
 export interface User {
-    id: string;
-    firstName: string;
-    lastName: string;
+    id: number;
+    first_name: string;
+    last_name: string;
     email: string;
     role: 'teacher' | 'student' | 'expert';
     password: string;
@@ -10,30 +10,30 @@ export interface User {
 
 
 export interface Test {
-    id: string;
+    id: number;
     title: string;
     author: User;
-    questions: Question[];
+    questions: number[];
 }
 
 
 
 export interface Question {
-    id: string;
+    id: number;
     text: string;
     answers: Answer[];
 }
 
 
 export interface Answer {
-    id: string;
-    isCorrect: boolean;
+    id: number;
+    is_correct: boolean;
     text: string;
 }
 
 
 export interface Result {
-    id: string;
+    id: number;
     test: Test;
     student: User;
     answers: Answer[];

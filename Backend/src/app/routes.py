@@ -18,3 +18,11 @@ def get_test_questions():
     if test_id is None:
         return jsonify({"error": "test_id is required"}), 400
     return test_service.get_test_questions(test_id)
+
+
+@main.route('/test', methods=['GET'])
+def get_test_by_id():
+    test_id = request.args.get('test_id', type=int)
+    if test_id is None:
+        return jsonify({"error": "test_id is required"}), 400
+    return test_service.get_test_by_id(test_id)
