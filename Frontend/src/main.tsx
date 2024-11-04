@@ -5,6 +5,7 @@ import TestsOverview from "./pages/teacher/tests-overview.tsx";
 import ReactDOM from 'react-dom/client'
 import TestOverview from "./pages/teacher/test-overview.tsx";
 import GraphDrawing from "./pages/teacher/graph-drawing.tsx";
+import Navbar from "./components/layout/navbar.tsx";
 
 const theme = createTheme({
     palette: {
@@ -80,9 +81,14 @@ const theme = createTheme({
 });
 
 const router = createBrowserRouter([
-    { path:"/tests", element: <TestsOverview/> },
-    { path:"/test/:id", element: <TestOverview/> },
-    { path:"/graph-drawing", element: <GraphDrawing/>}
+    { path:"/", element: <Navbar/>,
+        children: [
+            { path:"/", element: <TestsOverview/> },
+            { path:"/tests", element: <TestsOverview/> },
+            { path:"/test/:id", element: <TestOverview/> },
+            { path:"/graph-drawing", element: <GraphDrawing/>},
+        ]}
+
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
