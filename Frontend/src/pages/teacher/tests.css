@@ -25,3 +25,19 @@
     flex-direction: column;
     gap: 5px;
 }
+
+.questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.question-container {
+    width: 100%;
+}
+
+.question-card-content, .answers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}

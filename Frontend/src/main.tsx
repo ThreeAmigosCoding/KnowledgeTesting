@@ -3,6 +3,7 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import './index.css'
 import TestsOverview from "./pages/teacher/tests-overview.tsx";
 import ReactDOM from 'react-dom/client'
+import TestOverview from "./pages/teacher/test-overview.tsx";
 
 const theme = createTheme({
     palette: {
@@ -78,9 +79,8 @@ const theme = createTheme({
 });
 
 const router = createBrowserRouter([
-    {
-        path:"/tests", element: <TestsOverview/>
-    },
+    { path:"/tests", element: <TestsOverview/> },
+    { path:"/test/:id", element: <TestOverview/> },
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
