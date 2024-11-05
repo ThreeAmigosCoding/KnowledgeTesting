@@ -1,0 +1,13 @@
+.main-graph-container{
+    display: flex;
+    height: 100vh;
+}
+
+.graph-options-container{
+    flex-grow: 1;
+    border-right: 2px solid #1A1A1A;
+}
+
+.graph-container{
+    flex-grow: 2;
+}
