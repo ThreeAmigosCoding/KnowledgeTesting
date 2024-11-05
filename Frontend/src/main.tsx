@@ -66,13 +66,13 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     '& .MuiInputBase-input': {
-                        color: '#F5F5F5',
+                        color: '#1A1A1A',
                     },
                     '& .MuiInputLabel-root': {
-                        color: '#F5F5F5',
+                        color: '#1A1A1A',
                     },
                     '& .MuiFormHelperText-root': {
-                        color: '#F5F5F5',
+                        color: '#1A1A1A',
                     },
                 },
             },

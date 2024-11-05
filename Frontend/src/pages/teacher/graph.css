@@ -4,10 +4,23 @@
 }
 
 .graph-options-container{
-    flex-grow: 1;
+    width: 40%;
     border-right: 2px solid #1A1A1A;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .graph-container{
-    flex-grow: 2;
+    width: 60%;
+}
+
+.add-node-container, .add-edge-container {
+    display: flex;
+    gap: 10px;
+}
+
+.add-node-container > *, .add-edge-container > * {
+    flex-grow: 1;
 }

@@ -11,8 +11,24 @@ export default function Navbar() {
     return (
         <Box>
             <Box className='nav-bar'>
-                <Button className='nav-bar-button' sx={{color: "primary.contrastText"}} onClick={() => handleTests()}>Tests</Button>
-                <Button className='nav-bar-button' sx={{color: "primary.contrastText"}} onClick={() => handleGraph()}>Graph</Button>
+                <Button
+                    className='nav-bar-button'
+                    sx={{
+                        color: "primary.contrastText",
+                        fontSize: "larger"
+                    }}
+                    onClick={() => handleTests()}>
+                    Tests
+                </Button>
+                <Button
+                    className='nav-bar-button'
+                    sx={{
+                        color: "primary.contrastText",
+                        fontSize: "larger"
+                    }}
+                    onClick={() => handleGraph()}>
+                    Graph
+                </Button>
             </Box>
             <Outlet/>
         </Box>

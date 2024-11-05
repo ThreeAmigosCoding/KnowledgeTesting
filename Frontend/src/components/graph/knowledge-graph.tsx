@@ -24,7 +24,7 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("fill", "#040303");
 
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(150))
+            .force("link", d3.forceLink(links).id(d => d.title).distance(150))
             .force("charge", d3.forceManyBody().strength(-200))
             .force("center", d3.forceCenter(400, 300));
 
@@ -38,7 +38,7 @@ export default function KnowledgeGraph ({nodes, links}) {
 
         const labels = nodeGroup.append("text")
             .attr("text-anchor", "middle")
-            .text(d => d.id)
+            .text(d => d.title)
             .attr("font-size", "18px")
             .attr("fill", theme.palette.primary.contrastText)
             .attr("dy", ".30em");
