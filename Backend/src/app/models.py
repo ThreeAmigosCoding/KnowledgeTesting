@@ -70,3 +70,30 @@ class StudentAnswer(db.Model):
     result = relationship('Result', back_populates='student_answers')
     answer = relationship('Answer')
 
+class Graph(db.Model):
+    __tablename__ = 'graphs'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+
+    nodes = relationship('Node', back_populates='graph')
+    edges = relationship('Edge', back_populates='graph')
+
+class Node(db.Model):
+    __tablename__ = 'nodes'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    graph_id = db.Column(db.Integer, db.ForeignKey('graphs.id'), nullable=False)
+
+    graph = relationship('Graph', back_populates='nodes')
+
+class Edge(db.Model):
+    __tablename__ = 'edges'
+    id = db.Column(db.Integer, primary_key=True)
+    source_id = db.Column(db.Integer, db.ForeignKey('nodes.id'), nullable=False)
+    target_id = db.Column(db.Integer, db.ForeignKey('nodes.id'), nullable=False)
+    graph_id = db.Column(db.Integer, db.ForeignKey('graphs.id'), nullable=False)
+
+    source = relationship('Node', foreign_keys=[source_id])
+    target = relationship('Node', foreign_keys=[target_id])
+    graph = relationship('Graph')
+

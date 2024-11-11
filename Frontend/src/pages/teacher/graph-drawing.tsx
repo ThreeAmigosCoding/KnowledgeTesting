@@ -3,6 +3,7 @@ import {Box, Button, TextField, Typography, useTheme} from "@mui/material";
 import KnowledgeGraph from "../../components/graph/knowledge-graph.tsx";
 import "./graph.css";
 import {Node, Edge, Graph} from "../../model/models.tsx";
+import api from "../../config/axios-config.tsx";
 
 export default function GraphDrawing(){
     const [nodes, setNodes] = useState<Node[]>([]);
@@ -18,10 +19,10 @@ export default function GraphDrawing(){
         const newNodes = [
             { title: "AA" },
             { title: "BB" },
-            { title: "CC" },
+            { id: 123, title: "CC" },
         ];
         const newLinks = [
-            { source: "AA", target: "BB" },
+            { id: 123, source: "AA", target: "BB" },
             { source: "BB", target: "CC" },
         ];
 
@@ -97,13 +98,22 @@ export default function GraphDrawing(){
         setTargetNodeTitle("");
     };
 
-    const saveGraph = () => {
-        const graph: Graph = {
-            title: graphTitle,
-            nodes: nodes,
-            edges: links,
+    const saveGraph = async () => {
+        try {
+            const graph: Graph = {
+                title: graphTitle,
+                nodes: nodes,
+                edges: links,
+            }
+            console.log(graph)
+            const response = await api.post<Graph>("/save-graph", graph);
+            if (response.status == 201) {
+                alert("Graph created");
+            }
+        } catch (error) {
+            alert(error)
         }
-        console.log(graph)
+
     }
 
     return (
