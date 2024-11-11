@@ -1,4 +1,4 @@
-from .models import User, Test, Question, Answer, Result
+from .models import User, Test, Question, Answer, Result, Node, Edge, Graph
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields
 
@@ -47,3 +47,25 @@ class ResultSchema(SQLAlchemyAutoSchema):
 
     test = fields.Nested(TestSchema, exclude=('results',))
     student = fields.Nested(UserSchema, exclude=('test_results',))
+
+
+class NodeSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Node
+        load_instance = True
+        include_relationships = False
+
+class EdgeSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Edge
+        load_instance = True
+        include_relationships = False
+
+class GraphSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Graph
+        load_instance = True
+        include_relationships = True
+
+    nodes = fields.Nested('NodeSchema', many=True)
+    edges = fields.Nested('EdgeSchema', many=True)

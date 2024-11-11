@@ -38,3 +38,22 @@ export interface Result {
     student: User;
     answers: Answer[];
 }
+
+
+export interface Node {
+    id?: number;
+    title: string;
+}
+
+export interface Edge {
+    id?: number;
+    source: string;
+    target: string;
+}
+
+export interface Graph {
+    id?: number;
+    title: string;
+    nodes: Node[];
+    edges: Edge[];
+}

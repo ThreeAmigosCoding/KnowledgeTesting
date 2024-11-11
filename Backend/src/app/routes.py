@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .services import test_service
+from .services import test_service, graph_service
 
 main = Blueprint('main', __name__)
 
@@ -26,3 +26,8 @@ def get_test_by_id():
     if test_id is None:
         return jsonify({"error": "test_id is required"}), 400
     return test_service.get_test_by_id(test_id)
+
+
+@main.route('/save-graph', methods=['POST'])
+def save_graph():
+    return graph_service.save_graph(request.json)
