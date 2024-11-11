@@ -1,8 +1,12 @@
-.content {
+.content, .test-create-content {
     padding: 40px;
     display: flex;
     flex-direction: column;
     gap: 40px;
+}
+
+.test-create-content {
+    align-items: center;
 }
 
 .tests-container {
@@ -40,4 +44,36 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+
+#test-title {
+    font-size: x-large;
+    min-width: 500px;
+}
+
+.panels-container {
+    width: 100%;
+    display: flex;
+}
+
+.test-create-panel {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+#new-answer-container {
+    display: flex;
+    gap: 10px;
+}
+
+#new-answer-container > * {
+    flex-grow: 1;
+}
+
+.questions-title-and-save-button {
+    display: flex;
+    justify-content: space-between;
 }

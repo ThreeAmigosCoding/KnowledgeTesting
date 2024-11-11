@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom/client'
 import TestOverview from "./pages/teacher/test-overview.tsx";
 import GraphDrawing from "./pages/teacher/graph-drawing.tsx";
 import Navbar from "./components/layout/navbar.tsx";
+import TestCreate from "./pages/teacher/test-create.tsx";
 
 const theme = createTheme({
     palette: {
@@ -87,6 +88,7 @@ const router = createBrowserRouter([
             { path:"/tests", element: <TestsOverview/> },
             { path:"/test/:id", element: <TestOverview/> },
             { path:"/graph-drawing", element: <GraphDrawing/>},
+            { path:"/test-create", element: <TestCreate/>},
         ]}
 
 ])

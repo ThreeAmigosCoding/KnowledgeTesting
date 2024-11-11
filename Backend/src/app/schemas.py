@@ -55,11 +55,13 @@ class NodeSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_relationships = False
 
+
 class EdgeSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Edge
         load_instance = True
         include_relationships = False
+
 
 class GraphSchema(SQLAlchemyAutoSchema):
     class Meta:
