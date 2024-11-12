@@ -60,7 +60,10 @@ class EdgeSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Edge
         load_instance = True
-        include_relationships = False
+        include_relationships = True
+
+    source = fields.Str(attribute="source.title")
+    target = fields.Str(attribute="target.title")
 
 
 class GraphSchema(SQLAlchemyAutoSchema):

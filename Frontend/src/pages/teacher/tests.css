@@ -77,3 +77,10 @@
     display: flex;
     justify-content: space-between;
 }
+
+.test-create-graph-container{
+    width: 100%;
+    height: calc(100vh - 400px);
+    border: 1px solid #1A1A1A;
+    border-radius: 5px;
+}

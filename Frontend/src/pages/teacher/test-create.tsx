@@ -6,14 +6,15 @@ import {
     Button,
     TextField,
     Switch,
-    IconButton, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent,
+    IconButton, FormControl, InputLabel, Select, MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import './tests.css';
 import api from "../../config/axios-config.tsx";
 import { useEffect, useState } from "react";
-import {Answer, Graph, Question, Test, Node} from "../../model/models.tsx";
+import {Answer, Graph, Question, Test, Node, Edge} from "../../model/models.tsx";
 import { useNavigate } from "react-router-dom";
+import KnowledgeGraph from "../../components/graph/knowledge-graph.tsx";
 
 export default function TestCreate() {
     const navigate = useNavigate();
@@ -28,6 +29,8 @@ export default function TestCreate() {
 
     const [availableNodes, setAvailableNodes] = useState<Node[]>([]);
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>();
+
+    const [availableEdges, setAvailableEdges] = useState<Edge[]>([]);
 
     useEffect(() => {
         fetchGraphs().then(() => {});
@@ -55,6 +58,9 @@ export default function TestCreate() {
         setSelectedGraphId(graphId);
         const nodes  = availableGraphs.find(g => g.id == graphId)?.nodes
         if (nodes) {setAvailableNodes(nodes); setSelectedNodeId(nodes[0].id);}
+
+        const edges  = availableGraphs.find(g => g.id == graphId)?.edges
+        if (edges) setAvailableEdges(edges)
     }
 
     const addAnswer = () => {
@@ -166,6 +172,9 @@ export default function TestCreate() {
                                 ))}
                             </Select>
                         </FormControl>
+                        <Box className="test-create-graph-container">
+                            <KnowledgeGraph nodes={availableNodes} links={availableEdges} />
+                        </Box>
                     </Box>
                     <Box className="test-create-panel">
                         <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }}>
@@ -178,7 +187,7 @@ export default function TestCreate() {
                                 variant="outlined">
                                 {availableNodes.map((item, index) => (
                                     <MenuItem key={index} value={item.id}>
-                                        {item.id} - {item.title}
+                                        {index + 1} - {item.title}
                                     </MenuItem>
                                 ))}
                             </Select>
