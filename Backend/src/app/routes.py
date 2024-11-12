@@ -36,3 +36,8 @@ def save_graph():
 @main.route('/create-test', methods=['POST'])
 def create_test():
     return test_service.create_test(request.json)
+
+
+@main.route('/get-graphs', methods=['GET'])
+def get_graphs():
+    return graph_service.get_graphs()

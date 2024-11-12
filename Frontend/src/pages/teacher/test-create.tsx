@@ -6,13 +6,13 @@ import {
     Button,
     TextField,
     Switch,
-    IconButton,
+    IconButton, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import './tests.css';
 import api from "../../config/axios-config.tsx";
 import { useEffect, useState } from "react";
-import { Answer, Question, Test } from "../../model/models.tsx";
+import {Answer, Graph, Question, Test, Node} from "../../model/models.tsx";
 import { useNavigate } from "react-router-dom";
 
 export default function TestCreate() {
@@ -22,6 +22,40 @@ export default function TestCreate() {
     const [newAnswerText, setNewAnswerText] = useState<string>("");
     const [newAnswers, setNewAnswers] = useState<Answer[]>([]);
     const [questions, setQuestions] = useState<Question[]>([]);
+
+    const [availableGraphs, setAvailableGraphs] = useState<Graph[]>([]);
+    const [selectedGraphId, setSelectedGraphId] = useState<number | undefined>();
+
+    const [availableNodes, setAvailableNodes] = useState<Node[]>([]);
+    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>();
+
+    useEffect(() => {
+        fetchGraphs().then(() => {});
+    }, []);
+
+    const fetchGraphs = async () => {
+        try {
+            // const author_id = 1;
+            const response = await api.get<Graph[]>(`get-graphs`);
+            if (response.status === 200) {
+                setAvailableGraphs(response.data);
+
+            }
+        }
+        catch (error) {
+            alert(error)
+        }
+    }
+
+    useEffect(() => {
+        if (availableGraphs[0]) handleGraphChange(availableGraphs[0].id as number);
+    }, [availableGraphs]);
+
+    const handleGraphChange = (graphId: number) => {
+        setSelectedGraphId(graphId);
+        const nodes  = availableGraphs.find(g => g.id == graphId)?.nodes
+        if (nodes) {setAvailableNodes(nodes); setSelectedNodeId(nodes[0].id);}
+    }
 
     const addAnswer = () => {
         if (newAnswerText.trim()) {
@@ -48,6 +82,7 @@ export default function TestCreate() {
     const addQuestion = () => {
         if (
             newQuestionText.trim() &&
+            selectedNodeId &&
             newAnswers.length >= 2 &&
             newAnswers.some((answer) => answer.is_correct) &&
             !newAnswers.every((answer) => answer.is_correct)
@@ -56,7 +91,8 @@ export default function TestCreate() {
             const newQuestion: Question = {
                 text: newQuestionText,
                 answers: newAnswers,
-                is_multichoice: isMultiChoice
+                is_multichoice: isMultiChoice,
+                node_id: selectedNodeId
             };
             setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
             setNewQuestionText("");
@@ -72,6 +108,7 @@ export default function TestCreate() {
 
     const isAddQuestionDisabled = !(
         newQuestionText.trim() &&
+        selectedNodeId &&
         newAnswers.length >= 2 &&
         newAnswers.some((answer) => answer.is_correct) &&
         !newAnswers.every((answer) => answer.is_correct)
@@ -87,7 +124,7 @@ export default function TestCreate() {
             const test: Test = {
                 title: testTitle,
                 author_id: 1, // TODO FIX THIS
-                graph_id: 1,
+                graph_id: selectedGraphId,
                 questions: questions
             }
             const response = await api.post<Test>(`create-test`, test);
@@ -113,6 +150,39 @@ export default function TestCreate() {
                 />
                 <Box className="panels-container">
                     <Box className="test-create-panel">
+                        <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }}>
+                            <InputLabel id="dynamic-select-label">Choose Graph</InputLabel>
+                            <Select
+                                labelId="dynamic-select-label"
+                                id="dynamic-select"
+                                value={selectedGraphId ?? ""}
+                                onChange={e => handleGraphChange(e.target.value as number)}
+                                label="Choose Graph"
+                                variant="outlined">
+                                {availableGraphs.map((item, index) => (
+                                    <MenuItem key={index} value={item.id}>
+                                        {item.id} - {item.title}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box className="test-create-panel">
+                        <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }}>
+                            <InputLabel id="dynamic-select-label-node">Choose Question Field</InputLabel>
+                            <Select
+                                labelId="dynamic-select-label-node"
+                                value={selectedNodeId ?? ""}
+                                onChange={e => setSelectedNodeId(e.target.value as number)}
+                                label="Choose Question Field"
+                                variant="outlined">
+                                {availableNodes.map((item, index) => (
+                                    <MenuItem key={index} value={item.id}>
+                                        {item.id} - {item.title}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <TextField
                             id="new-question-text"
                             name="new-question-text"
