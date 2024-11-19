@@ -106,6 +106,45 @@ export default function TestCreate() {
         }
     };
 
+    const topologicalSort = () => {
+        const sortedNodes: Node[] = [];
+        const visited = new Set<string>();
+        const tempVisited = new Set<string>();
+
+        const visit = (node: Node) => {
+            if (tempVisited.has(node.title)) {
+                throw new Error("Graph has cycles!");
+            }
+            if (!visited.has(node.title)) {
+                tempVisited.add(node.title);
+                const outgoingEdges = availableEdges.filter(edge => edge.source === node.title);
+                outgoingEdges.forEach(edge => {
+                    const targetNode = availableNodes.find(n => n.title === edge.target);
+                    if (targetNode) visit(targetNode);
+                });
+                tempVisited.delete(node.title);
+                visited.add(node.title);
+                sortedNodes.push(node);
+            }
+        };
+
+        availableNodes.forEach(node => {
+            if (!visited.has(node.title)) visit(node);
+        });
+
+        return sortedNodes;
+    };
+
+
+    const getOrderedQuestions = () => {
+        const sortedNodes = topologicalSort();
+        const nodeOrder = sortedNodes.map(node => node.id);
+
+        return questions.slice().sort((a, b) => {
+            return nodeOrder.indexOf(a.node_id) - nodeOrder.indexOf(b.node_id);
+        });
+    };
+
     const deleteQuestion = (index: number) => {
         setQuestions((prevQuestions) =>
             prevQuestions.filter((_, qIndex) => qIndex !== index)
@@ -272,7 +311,7 @@ export default function TestCreate() {
                                 Save Test
                             </Button>
                         </Box>
-                        {questions.map((question, qIndex) => (
+                        {getOrderedQuestions().map((question, qIndex) => (
                             <Card key={qIndex} className="question-container">
                                 <CardContent className="question-card-content" sx={{ position: "relative" }}>
                                     <IconButton
