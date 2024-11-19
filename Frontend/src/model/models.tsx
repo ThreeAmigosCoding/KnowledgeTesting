@@ -61,3 +61,9 @@ export interface Graph {
     nodes: Node[];
     edges: Edge[];
 }
+
+export interface TestSubmission {
+    test_id: number,
+    student_id: number,
+    answers: number[]
+}

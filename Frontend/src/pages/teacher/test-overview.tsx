@@ -2,7 +2,7 @@ import {Box, Typography, Card, CardContent, FormControlLabel, Checkbox, Radio, B
 import './tests.css';
 import api from "../../config/axios-config.tsx";
 import {useEffect, useState} from "react";
-import {Question, Test} from "../../model/models.tsx";
+import {Question, Test, TestSubmission} from "../../model/models.tsx";
 import {useParams} from "react-router-dom";
 import {useUser} from "../../context/user-context.tsx";
 
@@ -12,7 +12,7 @@ export default function TestOverview() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [test, setTest] = useState<Test>();
 
-    const [answers, setAnswers] = useState<Record<number, string[]>>({});
+    const [answers, setAnswers] = useState<Record<number, number[]>>({});
 
 
     const {user, setUser} = useUser();
@@ -23,7 +23,7 @@ export default function TestOverview() {
         setUser({
             email: "pera@mail.com",
             first_name: "Pera",
-            id: 0,
+            id: 1,
             last_name: "Peric",
             password: "petar123",
             role: "student"
@@ -60,8 +60,8 @@ export default function TestOverview() {
         }
     }
 
-    const handleAnswerChange = (questionId: number | undefined, answerText: string, isChecked: boolean) => {
-        if (questionId) {
+    const handleAnswerChange = (questionId: number | undefined, answerId: number | undefined, isChecked: boolean) => {
+        if (questionId && answerId) {
             setAnswers((prev) => {
                 const updated = { ...prev };
                 if (!updated[questionId]) {
@@ -69,9 +69,9 @@ export default function TestOverview() {
                 }
 
                 if (isChecked) {
-                    updated[questionId].push(answerText);
+                    updated[questionId].push(answerId);
                 } else {
-                    updated[questionId] = updated[questionId].filter((a) => a !== answerText);
+                    updated[questionId] = updated[questionId].filter((id) => id !== answerId);
                 }
                 return updated;
             });
@@ -79,18 +79,35 @@ export default function TestOverview() {
 
     };
 
-    const handleSingleAnswerChange = (questionId: number | undefined, answerText: string) => {
+    const handleSingleAnswerChange = (questionId: number | undefined, answerId: number) => {
         if (questionId) {
             setAnswers((prev) => ({
                 ...prev,
-                [questionId]: [answerText],
+                [questionId]: [answerId]
             }));
         }
     };
 
-    const handleSubmit = () => {
-        console.log("Submitted answers:", answers);
-        alert("Test submitted successfully!");
+    const handleSubmit = async () => {
+        if (!test || !user || !test.id || user.role !== "student") return;
+
+        const testSubmission: TestSubmission = {
+            test_id: test.id,
+            student_id: user.id,
+            answers: Object.values(answers).flat()
+        };
+
+        try {
+            const response = await api.post('/submit-test', testSubmission);
+            if (response.status === 201) {
+                alert("Test submitted successfully!");
+            } else {
+                alert("Failed to submit the test.");
+            }
+        } catch (error) {
+            console.error("Error submitting test:", error);
+            alert("There was an error submitting the test.");
+        }
     };
 
     return (
@@ -123,7 +140,7 @@ export default function TestOverview() {
                                                 control={
                                                     <Checkbox
                                                         onChange={(e) =>
-                                                            handleAnswerChange(question.id, answer.text, e.target.checked)
+                                                            handleAnswerChange(question.id, answer.id, e.target.checked)
                                                         }
                                                     />
                                                 }
@@ -135,13 +152,13 @@ export default function TestOverview() {
                                         <RadioGroup
                                             key={question.id}
                                             onChange={(e) =>
-                                                handleSingleAnswerChange(question.id, e.target.value)
+                                                handleSingleAnswerChange(question.id, Number(e.target.value))
                                             }
                                         >
                                             {question.answers.map((answer) => (
                                                 <FormControlLabel
                                                     key={answer.id}
-                                                    value={answer.text}
+                                                    value={answer.id}
                                                     control={<Radio />}
                                                     label={answer.text}
                                                 />

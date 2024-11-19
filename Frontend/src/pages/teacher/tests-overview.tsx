@@ -57,11 +57,11 @@ export default function TestsOverview() {
                         <Card
                             key={test.id}
                             className="test-card"
-                            onClick={() => openTest(test.id)}>
+                            onClick={() => openTest(test.id as number)}>
                             <CardContent className="test-card-content">
                                 <Typography variant="h2">{test.title}</Typography>
                                 <Typography variant="h3">
-                                    Author: {test.author.first_name} {test.author.last_name}
+                                    Author: {test.author?.first_name} {test.author?.last_name}
                                 </Typography>
                                 <Typography variant="h4">
                                     Questions: {test.questions.length}
