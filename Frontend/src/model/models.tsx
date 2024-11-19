@@ -10,23 +10,27 @@ export interface User {
 
 
 export interface Test {
-    id: number;
+    id?: number;
     title: string;
-    author: User;
-    questions: number[];
+    author?: User;
+    author_id?: number;
+    graph_id?: number;
+    questions: number[] | Question[]; // TODO FIX THIS
 }
 
 
 
 export interface Question {
-    id: number;
+    id?: number;
     text: string;
+    is_multichoice?: boolean;
+    node_id?: number;
     answers: Answer[];
 }
 
 
 export interface Answer {
-    id: number;
+    id?: number;
     is_correct: boolean;
     text: string;
 }

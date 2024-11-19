@@ -1,4 +1,4 @@
-import { Box, Typography, Card, CardContent } from "@mui/material";
+import {Box, Typography, Card, CardContent, Button} from "@mui/material";
 import './tests.css';
 import api from "../../config/axios-config.tsx";
 import {useEffect, useState} from "react";
@@ -33,10 +33,25 @@ export default function TestsOverview() {
         navigate(`/test/${testId}`);
     };
 
+    const openTestCreate = () => {
+        navigate(`/test-create`);
+    };
+
     return (
         <Box className='main-container'>
             <Box className='content'>
                 <Typography variant='h1'>Tests</Typography>
+                <Button
+                    sx={{
+                        fontSize: "x-large",
+                        textTransform: "capitalize",
+                        maxWidth: "300px"
+                    }}
+                    id="open-test-create"
+                    variant="contained" color="primary"
+                    onClick={openTestCreate}>
+                    Create Test
+                </Button>
                 <Box className="tests-container">
                     {tests.map((test) => (
                         <Card

@@ -20,9 +20,11 @@ class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    graph_id = db.Column(db.Integer, db.ForeignKey('graphs.id'), nullable=True)
 
     author = relationship('User', back_populates='tests_created')
     questions = relationship('Question', back_populates='test')
+    graph = relationship('Graph')
 
 
 class Question(db.Model):
@@ -32,9 +34,11 @@ class Question(db.Model):
     text = db.Column(db.String(255), nullable=False)
     test_id = db.Column(db.Integer, db.ForeignKey('tests.id'), nullable=False)
     is_multichoice = db.Column(db.Boolean, default=False)
+    node_id = db.Column(db.Integer, db.ForeignKey('nodes.id'), nullable=True)
 
     test = relationship('Test', back_populates='questions')
     answers = relationship('Answer', back_populates='question')
+    node = relationship('Node')
 
 
 class Answer(db.Model):

@@ -1,10 +1,11 @@
 from flask import jsonify
 from sqlalchemy.exc import SQLAlchemyError
 from ..models import db, Graph, Node, Edge
-from ..schemasDTO.in_schemas import GraphSchema
+from ..schemasDTO.in_schemas import GraphSchemaInput
+from ..schemas import GraphSchema
 
 def save_graph(request_body):
-    graph_schema = GraphSchema()
+    graph_schema = GraphSchemaInput()
     graph_data = graph_schema.load(request_body)
 
     graph = Graph(title=graph_data['title'])
@@ -37,3 +38,8 @@ def save_graph(request_body):
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+def get_graphs():
+    graphs = Graph.query.all() #TODO add filtering by author id
+    graph_schema = GraphSchema(many=True)
+    return jsonify(graph_schema.dump(graphs))
