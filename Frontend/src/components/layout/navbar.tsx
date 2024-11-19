@@ -15,7 +15,7 @@ export default function Navbar() {
                     className='nav-bar-button'
                     sx={{
                         color: "primary.contrastText",
-                        fontSize: "larger"
+                        fontSize: 'medium'
                     }}
                     onClick={() => handleTests()}>
                     Tests
@@ -24,7 +24,7 @@ export default function Navbar() {
                     className='nav-bar-button'
                     sx={{
                         color: "primary.contrastText",
-                        fontSize: "larger"
+                        fontSize: "medium"
                     }}
                     onClick={() => handleGraph()}>
                     Graph

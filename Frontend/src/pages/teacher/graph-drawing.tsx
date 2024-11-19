@@ -137,7 +137,7 @@ export default function GraphDrawing(){
                     />
                     <Button
                         sx={{
-                            fontSize: "large",
+                            fontSize: "medium",
                             textTransform: "capitalize"
                         }}
                         id="add-node-button"
@@ -148,7 +148,7 @@ export default function GraphDrawing(){
                     </Button>
                     <Button
                         sx={{
-                            fontSize: "large",
+                            fontSize: "medium",
                             textTransform: "capitalize"
                         }}
                         id="remove-node-button"
@@ -175,7 +175,7 @@ export default function GraphDrawing(){
                     />
                     <Button
                         sx={{
-                            fontSize: "large",
+                            fontSize: "medium",
                             textTransform: "capitalize"
                         }}
                         id="add-edge-button"
@@ -186,7 +186,7 @@ export default function GraphDrawing(){
                     </Button>
                     <Button
                         sx={{
-                            fontSize: "large",
+                            fontSize: "medium",
                             textTransform: "capitalize"
                         }}
                         id="remove-edge-button"

@@ -40,10 +40,10 @@ export default function TestsOverview() {
     return (
         <Box className='main-container'>
             <Box className='content'>
-                <Typography variant='h1'>Tests</Typography>
+                <Typography variant='h1' sx={{textAlign: 'center'}}>Tests</Typography>
                 <Button
                     sx={{
-                        fontSize: "x-large",
+                        fontSize: "large",
                         textTransform: "capitalize",
                         maxWidth: "300px"
                     }}

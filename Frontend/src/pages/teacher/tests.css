@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
+    max-height: calc(100vh - 100px);
 }
 
 .test-create-content {
@@ -34,6 +35,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow-y: auto;
 }
 
 .question-container {
@@ -47,7 +49,6 @@
 }
 
 #test-title {
-    font-size: x-large;
     min-width: 500px;
 }
 

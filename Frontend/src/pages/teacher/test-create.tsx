@@ -249,7 +249,7 @@ export default function TestCreate() {
                             />
                             <Button
                                 sx={{
-                                    fontSize: "larger",
+                                    fontSize: "large",
                                     textTransform: "capitalize",
                                     maxWidth: "300px",
                                 }}
@@ -281,7 +281,7 @@ export default function TestCreate() {
                         </Box>
                         <Button
                             sx={{
-                                fontSize: "larger",
+                                fontSize: "large",
                                 textTransform: "capitalize",
                             }}
                             fullWidth
@@ -299,7 +299,7 @@ export default function TestCreate() {
                             <Typography variant="h3">Questions</Typography>
                             <Button
                                 sx={{
-                                    fontSize: "larger",
+                                    fontSize: "large",
                                     textTransform: "capitalize",
                                 }}
                                 id="save-test"
