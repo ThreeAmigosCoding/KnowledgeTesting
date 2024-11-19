@@ -133,7 +133,6 @@ export default function TestOverview() {
                                             </Typography>
                                         ))
                                     ) : question.is_multichoice ? (
-                                        // Multiple choice (checkbox)
                                         question.answers.map((answer) => (
                                             <FormControlLabel
                                                 key={answer.id}
@@ -148,7 +147,6 @@ export default function TestOverview() {
                                             />
                                         ))
                                     ) : (
-                                        // Single choice (radio button) with RadioGroup
                                         <RadioGroup
                                             key={question.id}
                                             onChange={(e) =>
@@ -174,7 +172,10 @@ export default function TestOverview() {
                             variant="contained"
                             color="primary"
                             fullWidth
-                            sx={{ marginTop: 2 }}
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize"
+                            }}
                             onClick={handleSubmit}
                         >
                             Submit Test

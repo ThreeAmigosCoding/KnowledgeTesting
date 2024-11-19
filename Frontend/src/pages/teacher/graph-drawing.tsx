@@ -176,7 +176,8 @@ export default function GraphDrawing(){
                     <Button
                         sx={{
                             fontSize: "medium",
-                            textTransform: "capitalize"
+                            textTransform: "capitalize",
+                            minWidth: "160px"
                         }}
                         id="add-edge-button"
                         variant="contained" color="primary"
@@ -187,7 +188,8 @@ export default function GraphDrawing(){
                     <Button
                         sx={{
                             fontSize: "medium",
-                            textTransform: "capitalize"
+                            textTransform: "capitalize",
+                            minWidth: "160px"
                         }}
                         id="remove-edge-button"
                         variant="contained" color="error"
