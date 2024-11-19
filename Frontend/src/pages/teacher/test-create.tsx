@@ -146,8 +146,8 @@ export default function TestCreate() {
     };
 
     const deleteQuestion = (index: number) => {
-        setQuestions((prevQuestions) =>
-            prevQuestions.filter((_, qIndex) => qIndex !== index)
+        setQuestions(() =>
+            getOrderedQuestions().filter((_, qIndex) => qIndex !== index)
         );
     };
 
