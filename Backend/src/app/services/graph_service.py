@@ -1,6 +1,8 @@
+import pandas as pd
 from flask import jsonify
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
+from learning_spaces.kst import iita
 
 from ..models import db, Graph, Node, Edge, Result, Answer, StudentAnswer, Question
 from ..schemasDTO.in_schemas import GraphSchemaInput
@@ -80,3 +82,23 @@ def create_knowledge_matrix(test_id):
         knowledge_matrix.append(student_row)
 
     return knowledge_matrix, node_index_map
+
+def generate_real_graph(test_id):
+    matrix, node_index_map = create_knowledge_matrix(test_id)
+
+    relations = analyze_responses(matrix, node_index_map)
+    print(relations)
+
+def analyze_responses(matrix, node_index_map):
+    df = pd.DataFrame(matrix, columns=[f"Node_{i}" for i in range(len(matrix[0]))])
+
+    response = iita(df, v=1)
+
+    index_to_node_id = {index: node_id for node_id, index in node_index_map.items()}
+
+    relations = [
+        (index_to_node_id[int(rel[0])], index_to_node_id[int(rel[1])])
+        for rel in response['implications']
+    ]
+
+    return relations
