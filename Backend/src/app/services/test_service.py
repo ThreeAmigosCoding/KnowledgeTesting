@@ -6,7 +6,7 @@ from ..database import db
 from ..models import Test, Question, Answer, Result, StudentAnswer
 from ..schemas import TestSchema, QuestionSchema
 from ..schemasDTO.in_schemas import TestSchemaInput, TestSubmissionSchemaInput
-from .graph_service import create_knowledge_matrix
+from .graph_service import generate_real_graph
 
 
 def get_tests(author_id):
@@ -88,7 +88,8 @@ def submit_test(request_body):
 
     db.session.commit()
 
-    matrix, node_map = create_knowledge_matrix(test_id)
-    print(f'Matrix: {matrix} \nNode Map: {node_map}')
+    # matrix, node_map = create_knowledge_matrix(test_id)
+    # print(f'Matrix: {matrix} \nNode Map: {node_map}')
+    generate_real_graph(test_id)
 
     return jsonify({"message": "Test submitted successfully"}), 201

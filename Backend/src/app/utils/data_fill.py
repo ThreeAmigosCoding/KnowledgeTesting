@@ -116,20 +116,17 @@ def init_data(app, db):
         db.session.commit()
         results = []
         student_answers = [
-            # Student 1: tačno odgovara na sva pitanja
             {
                 "student": student1,
-                "answers": [1, 4, 7]  # IDs odgovora
+                "answers": [1, 4, 7]
             },
-            # Student 2: greši jedno pitanje
             {
                 "student": student2,
-                "answers": [1, 4, 8]  # IDs odgovora
+                "answers": [1, 4, 8]
             },
-            # Student 3: greši dva pitanja
             {
                 "student": student3,
-                "answers": [1, 5, 8]  # IDs odgovora
+                "answers": [1, 5, 8]
             }
         ]
 
@@ -139,10 +136,8 @@ def init_data(app, db):
             db.session.flush()
             results.append(result)
 
-            # Dodaj odgovore za svakog studenta u tabelu student_answers
             for answer_id in sa["answers"]:
                 student_answer = StudentAnswer(result_id=result.id, answer_id=answer_id)
                 db.session.add(student_answer)
 
         db.session.commit()
-        # print("Podaci uspešno ubačeni!")
