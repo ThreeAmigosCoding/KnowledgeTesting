@@ -3,17 +3,18 @@ import './tests.css';
 import api from "../../config/axios-config.tsx";
 import {useEffect, useState} from "react";
 import {Question, Test, TestSubmission} from "../../model/models.tsx";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useUser} from "../../context/user-context.tsx";
 
 export default function TestOverview() {
+
+    const navigate = useNavigate();
 
     const { id } = useParams<{ id: string; }>();
     const [questions, setQuestions] = useState<Question[]>([]);
     const [test, setTest] = useState<Test>();
 
     const [answers, setAnswers] = useState<Record<number, number[]>>({});
-
 
     const {user, setUser} = useUser();
 
@@ -26,7 +27,8 @@ export default function TestOverview() {
             id: 1,
             last_name: "Peric",
             password: "petar123",
-            role: "student"
+            role: "teacher"
+            // role: "student"
         });
     }, []);
 
@@ -110,10 +112,28 @@ export default function TestOverview() {
         }
     };
 
+    const openGraphsComparison = () => {
+        navigate(`/graphs-comparison/${id}`);
+    };
+
     return (
         <Box className='main-container'>
             <Box className='content'>
-                <Typography variant='h2' sx={{textAlign: 'center'}}>{test?.title}</Typography>
+                <Typography variant='h1' sx={{textAlign: 'center'}}>{test?.title}</Typography>
+                {user && user.role === "teacher" && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            fontSize: "medium",
+                            textTransform: "capitalize",
+                            maxWidth: "300px"
+                        }}
+                        onClick={openGraphsComparison}
+                    >
+                        Graphs
+                    </Button>
+                )}
                 <Box className="questions-container">
                     {questions.map((question) => (
                         <Card key={question.id} className="question-container">

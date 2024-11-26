@@ -43,6 +43,22 @@ def get_graphs():
     return graph_service.get_graphs()
 
 
+@main.route('/get-graph-by-test-id', methods=['GET'])
+def get_graphs_by_test_id():
+    test_id = request.args.get('id', type=int)
+    if test_id is None:
+        return jsonify({"error": "test_id is required"}), 400
+    return graph_service.get_graph_by_test_id(test_id)
+
+
+@main.route('/get-generated-graphs', methods=['GET'])
+def get_generated_graphs():
+    related_graph_id = request.args.get('assumedGraphId', type=int)
+    if related_graph_id is None:
+        return jsonify({"error": "related_graph_id is required"}), 400
+    return graph_service.get_generated_graphs(related_graph_id)
+
+
 @main.route('submit-test', methods=['POST'])
 def submit_test():
     return test_service.submit_test(request.json)

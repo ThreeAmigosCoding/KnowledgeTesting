@@ -8,6 +8,7 @@ from ..models import db, Graph, Node, Edge, Result, Answer, StudentAnswer, Quest
 from ..schemasDTO.in_schemas import GraphSchemaInput
 from ..schemas import GraphSchema
 
+
 def save_graph(request_body):
     graph_schema = GraphSchemaInput()
     graph_data = graph_schema.load(request_body)
@@ -43,13 +44,27 @@ def save_graph(request_body):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
+
 def get_graphs():
-    graphs = Graph.query.all() #TODO add filtering by author id
+    graphs = Graph.query.all()  # TODO add filtering by author id
     graph_schema = GraphSchema(many=True)
     return jsonify(graph_schema.dump(graphs))
 
-def create_knowledge_matrix(test_id):
 
+def get_graph_by_test_id(test_id):
+    graph_id = Test.query.with_entities(Test.graph_id).filter_by(id=test_id).scalar()
+    graph = Graph.query.filter(Graph.id == graph_id).first()
+    graph_schema = GraphSchema(many=False)
+    return jsonify(graph_schema.dump(graph)), 200
+
+
+def get_generated_graphs(related_graph_id):
+    graphs = Graph.query.filter(Graph.related_graph_id == related_graph_id).all()
+    graph_schema = GraphSchema(many=True)
+    return jsonify(graph_schema.dump(graphs)), 200
+
+
+def create_knowledge_matrix(test_id):
     results = Result.query.filter_by(test_id=test_id, is_used=False).all()
 
     questions = Question.query.filter_by(test_id=test_id).all()
@@ -71,11 +86,11 @@ def create_knowledge_matrix(test_id):
                 answers_by_question[question_id] = []
             answers_by_question[question_id].append(student_answer.answer.id)
 
-
         for question_id, selected_answer_ids in answers_by_question.items():
             node_id = node_map[question_id]
 
-            correct_answers_ids = [answer.id for answer in Answer.query.filter_by(question_id=question_id, is_correct=True)]
+            correct_answers_ids = [answer.id for answer in
+                                   Answer.query.filter_by(question_id=question_id, is_correct=True)]
             if set(correct_answers_ids) == set(selected_answer_ids):
                 student_row[node_index_map[node_id]] = 1
 
@@ -83,6 +98,7 @@ def create_knowledge_matrix(test_id):
 
     db.session.commit()
     return knowledge_matrix, node_index_map
+
 
 def analyze_responses(matrix, node_index_map):
     df = pd.DataFrame(matrix, columns=[f"Node_{i}" for i in range(len(matrix[0]))])
@@ -97,6 +113,7 @@ def analyze_responses(matrix, node_index_map):
     ]
 
     return relations
+
 
 def create_graph_from_relations(relations, test_id):
     related_graph_id = Test.query.with_entities(Test.graph_id).filter_by(id=test_id).scalar()
@@ -138,6 +155,7 @@ def create_graph_from_relations(relations, test_id):
     db.session.commit()
 
     return new_graph
+
 
 def generate_real_graph(test_id):
     matrix, node_index_map = create_knowledge_matrix(test_id)

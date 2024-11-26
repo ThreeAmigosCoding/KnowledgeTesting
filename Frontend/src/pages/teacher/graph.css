@@ -24,3 +24,29 @@
 .add-node-container > *, .add-edge-container > * {
     flex-grow: 1;
 }
+
+.header-content {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.header-content > * {
+    width: 30%;
+}
+
+.graphs-comparison-container {
+    display: flex;
+    gap: 20px;
+    height: 100vh;
+}
+
+.graphs-comparison-container > * {
+    width: 50%;
+}
+
+.graph-comparison-container {
+    border: 1px solid #1A1A1A;
+    border-radius: 5px;
+    height: 100%;
+}

@@ -67,6 +67,7 @@ def create_test(request_body):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
+
 def submit_test(request_body):
     schema = TestSubmissionSchemaInput()
     try:
