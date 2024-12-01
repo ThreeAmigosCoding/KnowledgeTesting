@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .services import test_service, graph_service
+from .services import test_service, graph_service, user_service
 
 main = Blueprint('main', __name__)
 
@@ -62,3 +62,11 @@ def get_generated_graphs():
 @main.route('submit-test', methods=['POST'])
 def submit_test():
     return test_service.submit_test(request.json)
+
+@main.route('/login', methods=['POST'])
+def login():
+    return user_service.login(request.json)
+
+@main.route('/register', methods=['POST'])
+def register():
+    return user_service.register(request.json)
