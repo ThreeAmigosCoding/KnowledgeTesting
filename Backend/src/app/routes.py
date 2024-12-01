@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .services import test_service, graph_service, user_service
+from .utils.auth import authorize
 
 main = Blueprint('main', __name__)
 

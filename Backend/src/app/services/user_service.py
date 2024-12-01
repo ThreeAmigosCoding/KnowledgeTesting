@@ -20,7 +20,10 @@ def login(request_body):
     if not user or not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
         return jsonify({'message': 'Invalid email or password'}), 401
 
-    access_token = create_access_token(identity={'id': user.id, 'email': user.email, 'role': user.role})
+    access_token = create_access_token(
+        identity=str(user.id),
+        additional_claims={'email': user.email, 'role': user.role}
+    )
     return jsonify({'token': access_token}), 200
 
 def register(request_body):
