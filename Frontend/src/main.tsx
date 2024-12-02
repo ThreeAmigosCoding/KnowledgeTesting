@@ -9,6 +9,8 @@ import Navbar from "./components/layout/navbar.tsx";
 import TestCreate from "./pages/teacher/test-create.tsx";
 import {UserProvider} from "./context/user-context.tsx";
 import GraphsComparison from "./pages/teacher/graphs-comparison.tsx";
+import Registration from "./pages/auth/registration.tsx";
+import {Login} from "./pages/auth/login.tsx";
 
 
 const theme = createTheme({
@@ -84,15 +86,26 @@ const theme = createTheme({
 });
 
 const router = createBrowserRouter([
-    { path:"/", element: <Navbar/>,
+    {
+        path:"/", element: <Login/>
+    },
+    {
+        path:"/login", element: <Login/>
+    },
+    {
+        path:"/registration", element:
+            <Registration/>
+    },
+    {
+        path:"/", element: <Navbar/>,
         children: [
-            { path:"/", element: <TestsOverview/> },
             { path:"/tests", element: <TestsOverview/> },
             { path:"/test/:id", element: <TestOverview/> },
             { path:"/graph-drawing", element: <GraphDrawing/>},
             { path:"/test-create", element: <TestCreate/>},
-            { path:"/graphs-comparison/:id", element: <GraphsComparison/> },
-        ]}
+            { path:"/graphs-comparison/:id", element: <GraphsComparison/> }
+        ]
+    }
 
 ])
 

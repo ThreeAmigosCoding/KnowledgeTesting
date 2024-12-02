@@ -16,20 +16,11 @@ export default function TestOverview() {
 
     const [answers, setAnswers] = useState<Record<number, number[]>>({});
 
-    const {user, setUser} = useUser();
+    const {user} = useUser();
 
     useEffect(() => {
         fetchTest().then(() => {});
         fetchQuestions().then(() => {});
-        setUser({
-            email: "pera@mail.com",
-            first_name: "Pera",
-            id: 1,
-            last_name: "Peric",
-            password: "petar123",
-            role: "teacher"
-            // role: "student"
-        });
     }, []);
 
     const fetchQuestions = async () => {
