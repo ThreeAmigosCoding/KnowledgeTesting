@@ -15,10 +15,10 @@ def get_tests(author_id):
     return jsonify(test_schema.dump(tests))
 
 
-def get_test_questions(test_id):
-    questions = Question.query.filter(Question.test_id == test_id).all()
-    question_schema = QuestionSchema(many=True)
-    return jsonify(question_schema.dump(questions))
+# def get_test_questions(test_id):
+#     questions = Question.query.filter(Question.test_id == test_id).all()
+#     question_schema = QuestionSchema(many=True)
+#     return jsonify(question_schema.dump(questions))
 
 
 def get_test_by_id(test_id):

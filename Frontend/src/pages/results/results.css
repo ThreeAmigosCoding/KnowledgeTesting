@@ -1,0 +1,21 @@
+.results-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.result-card {
+    min-width: 400px;
+}
+
+.result-card:hover {
+    cursor: pointer;
+    box-shadow: #1A1A1A 2px 2px 8px;
+}
+
+.result-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

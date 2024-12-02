@@ -7,6 +7,7 @@ export default function Navbar() {
     const navigate = useNavigate();
     const handleTests = () => { navigate("/tests"); }
     const handleGraph = () => { navigate("/graph-drawing"); }
+    const handleResults = () => { navigate("/results"); }
 
     return (
         <Box>
@@ -28,6 +29,15 @@ export default function Navbar() {
                     }}
                     onClick={() => handleGraph()}>
                     Graph
+                </Button>
+                <Button
+                    className='nav-bar-button'
+                    sx={{
+                        color: "primary.contrastText",
+                        fontSize: "medium"
+                    }}
+                    onClick={() => handleResults()}>
+                    Results
                 </Button>
             </Box>
             <Outlet/>
