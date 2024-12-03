@@ -163,3 +163,4 @@ def generate_real_graph(test_id):
     relations = analyze_responses(matrix, node_index_map)
 
     create_graph_from_relations(relations, test_id)
+

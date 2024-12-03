@@ -1,14 +1,18 @@
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import './index.css'
-import TestsOverview from "./pages/teacher/tests-overview.tsx";
+import TestsOverview from "./pages/tests/tests-overview.tsx";
 import ReactDOM from 'react-dom/client'
-import TestOverview from "./pages/teacher/test-overview.tsx";
-import GraphDrawing from "./pages/teacher/graph-drawing.tsx";
+import TestOverview from "./pages/tests/test-overview.tsx";
+import GraphDrawing from "./pages/graphs/graph-drawing.tsx";
 import Navbar from "./components/layout/navbar.tsx";
-import TestCreate from "./pages/teacher/test-create.tsx";
+import TestCreate from "./pages/tests/test-create.tsx";
 import {UserProvider} from "./context/user-context.tsx";
-import GraphsComparison from "./pages/teacher/graphs-comparison.tsx";
+import Registration from "./pages/auth/registration.tsx";
+import {Login} from "./pages/auth/login.tsx";
+import GraphsComparison from "./pages/graphs/graphs-comparison.tsx";
+import ResultsOverview from "./pages/results/results-overview.tsx";
+import ResultOverview from "./pages/results/result-overview.tsx";
 
 
 const theme = createTheme({
@@ -84,15 +88,28 @@ const theme = createTheme({
 });
 
 const router = createBrowserRouter([
-    { path:"/", element: <Navbar/>,
+    {
+        path:"/", element: <Login/>
+    },
+    {
+        path:"/login", element: <Login/>
+    },
+    {
+        path:"/registration", element:
+            <Registration/>
+    },
+    {
+        path:"/", element: <Navbar/>,
         children: [
-            { path:"/", element: <TestsOverview/> },
             { path:"/tests", element: <TestsOverview/> },
             { path:"/test/:id", element: <TestOverview/> },
             { path:"/graph-drawing", element: <GraphDrawing/>},
             { path:"/test-create", element: <TestCreate/>},
             { path:"/graphs-comparison/:id", element: <GraphsComparison/> },
-        ]}
+            { path:"/results", element: <ResultsOverview/> },
+            { path:"/result/:id", element: <ResultOverview/> }
+        ]
+    }
 
 ])
 

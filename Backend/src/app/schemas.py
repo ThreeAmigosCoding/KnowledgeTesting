@@ -36,7 +36,7 @@ class TestSchema(SQLAlchemyAutoSchema):
         include_relationships = True
 
     author = fields.Nested(UserSchema, only=('first_name', 'last_name',))
-    # questions = fields.List(fields.Nested(QuestionSchema, exclude=('answers',)))
+    questions = fields.List(fields.Nested(QuestionSchema))
 
 
 class ResultSchema(SQLAlchemyAutoSchema):
@@ -45,8 +45,21 @@ class ResultSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_relationships = True
 
-    test = fields.Nested(TestSchema, exclude=('results',))
-    student = fields.Nested(UserSchema, exclude=('test_results',))
+    test = fields.Nested(TestSchema)
+    student_answers = fields.Method("get_student_answers")
+
+    def get_student_answers(self, obj):
+        answers_by_question = {}
+        for student_answer in obj.student_answers:
+            question_id = student_answer.answer.question.id
+            if question_id not in answers_by_question:
+                answers_by_question[question_id] = []
+            answers_by_question[question_id].append(student_answer.answer.id)
+
+        return {
+            question_id: answer_ids
+            for question_id, answer_ids in answers_by_question.items()
+        }
 
 
 class NodeSchema(SQLAlchemyAutoSchema):

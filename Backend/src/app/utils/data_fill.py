@@ -11,7 +11,7 @@ def init_data(app, db):
             last_name="Marković",
             email="marko.markovic@school.com",
             role="teacher",
-            password="hashed_password"
+            password="$2a$12$nhLsLmGCtqSuCfWj4V5lteOR7LWIyB2Y3N1VfD7jMSwipMsBjqbem"
         )
 
         student1 = User(
@@ -19,21 +19,21 @@ def init_data(app, db):
             last_name="Jovanović",
             email="jovan.jovanovic@school.com",
             role="student",
-            password="hashed_password"
+            password="$2a$12$w5NtbS6mbUJasUra0JRnLegf28DR6FwhcaeEGygF041QQyArBr5iG"
         )
         student2 = User(
             first_name="Ana",
             last_name="Anić",
             email="ana.anic@school.com",
             role="student",
-            password="hashed_password"
+            password="$2a$12$sfWMJiwQJmc/NUHfoTZaF.yQynEalJiJx9DyUDB5./ZA1KI/V/Rnq"
         )
         student3 = User(
             first_name="Milan",
             last_name="Milić",
             email="milan.milic@school.com",
             role="student",
-            password="hashed_password"
+            password="$2a$12$LYdTAtlA1nzetDqPKH/Rlen7EAePAsLWL9WkiD9HFDeGOlpd.pGxa"
         )
 
         db.session.add_all([professor, student1, student2, student3])

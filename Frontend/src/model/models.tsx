@@ -1,10 +1,10 @@
 export interface User {
     id: number;
-    first_name: string;
-    last_name: string;
+    first_name?: string;
+    last_name?: string;
     email: string;
     role: 'teacher' | 'student' ;
-    password: string;
+    password?: string;
 }
 
 
@@ -21,7 +21,7 @@ export interface Test {
 
 
 export interface Question {
-    id?: number;
+    id: number;
     text: string;
     is_multichoice?: boolean;
     node_id?: number;
@@ -40,7 +40,9 @@ export interface Result {
     id: number;
     test: Test;
     student: User;
-    answers: Answer[];
+    student_answers: Record<number, number[]>;
+    is_used: boolean;
+    timestamp: string;
 }
 
 
@@ -67,3 +69,5 @@ export interface TestSubmission {
     student_id: number,
     answers: number[]
 }
+
+

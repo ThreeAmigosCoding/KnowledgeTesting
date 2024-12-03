@@ -4,11 +4,14 @@ import api from "../../config/axios-config.tsx";
 import {useEffect, useState} from "react";
 import {Test} from "../../model/models.tsx";
 import {useNavigate} from "react-router-dom";
+import {useUser} from "../../context/user-context.tsx";
 
 export default function TestsOverview() {
 
     const navigate = useNavigate();
     const [tests, setTests] = useState<Test[]>([]);
+
+    const {user} = useUser();
 
     useEffect(() => {
         fetchTests().then(() => {})
@@ -41,7 +44,7 @@ export default function TestsOverview() {
         <Box className='main-container'>
             <Box className='content'>
                 <Typography variant='h1' sx={{textAlign: 'center'}}>Tests</Typography>
-                <Button
+                {user.role === "teacher" && <Button
                     sx={{
                         fontSize: "large",
                         textTransform: "capitalize",
@@ -51,7 +54,7 @@ export default function TestsOverview() {
                     variant="contained" color="primary"
                     onClick={openTestCreate}>
                     Create Test
-                </Button>
+                </Button>}
                 <Box className="tests-container">
                     {tests.map((test) => (
                         <Card
