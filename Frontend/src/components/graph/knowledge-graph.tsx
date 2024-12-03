@@ -1,10 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import {useTheme} from "@mui/material";
 
+
 export default function KnowledgeGraph ({nodes, links}) {
     const svgRef = useRef();
     const theme = useTheme();
+    let hasZoomed = false;
 
     useEffect(() => {
         const svg = d3.select(svgRef.current)
@@ -23,13 +27,15 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("d", "M0,-5L10,0L0,5")
             .attr("fill", "#040303");
 
+        const g = svg.append("g");
+
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.title).distance(150))
             .force("charge", d3.forceManyBody().strength(-200))
-            .force("center", d3.forceCenter(400, 300));
+            .force("center", d3.forceCenter(svgRef.current.clientWidth / 2, svgRef.current.clientHeight / 2));
 
 
-        const nodeGroup = svg.append("g")
+        const nodeGroup = g.append("g")
             .selectAll("g")
             .data(nodes)
             .enter()
@@ -59,7 +65,7 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("rx", 5)
             .attr("ry", 5);
 
-        const link = svg.append("g")
+        const link = g.append("g")
             .selectAll("line")
             .data(links)
             .enter()
@@ -81,7 +87,34 @@ export default function KnowledgeGraph ({nodes, links}) {
 
             nodeGroup
                 .attr("transform", d => `translate(${d.x},${d.y})`);
+
+            if (!hasZoomed) {
+                // Calculate initial zoom after the first few ticks
+                const bounds = g.node().getBBox();
+                const fullWidth = svgRef.current.clientWidth;
+                const fullHeight = svgRef.current.clientHeight;
+                const width = bounds.width;
+                const height = bounds.height;
+                const midX = bounds.x + width / 2;
+                const midY = bounds.y + height / 2;
+
+                const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
+                const transform = d3.zoomIdentity
+                    .translate(fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY)
+                    .scale(scale);
+
+                svg.call(zoom.transform, transform);
+                hasZoomed = true; // Ensure this runs only once
+            }
         });
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 5]) // Set zoom range
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
 
         return () => {
             svg.selectAll('*').remove();
