@@ -1,4 +1,4 @@
-import {Box, FormControl, InputLabel, MenuItem, Select, Typography} from "@mui/material";
+import {Box, FormControl, InputLabel, MenuItem, Select, Typography, useTheme} from "@mui/material";
 import {useParams} from "react-router-dom";
 import api from "../../config/axios-config.tsx";
 import {Edge, Graph, Node, Test} from "../../model/models.tsx";
@@ -16,12 +16,13 @@ export default function GraphsComparison() {
     const [assumedEdges, setAssumedEdges] = useState<Edge[]>([]);
 
 
-
     const [selectedGraphId, setSelectedGraphId] = useState<number | undefined>();
     const [generatedGraphs, setGeneratedGraphs] = useState<Graph[]>([]);
 
     const [generatedNodes, setGeneratedNodes] = useState<Node[]>([]);
     const [generatedEdges, setGeneratedEdges] = useState<Edge[]>([]);
+
+    const theme = useTheme();
 
 
     useEffect(() => {
@@ -39,8 +40,17 @@ export default function GraphsComparison() {
                 params: { id }
             });
             if (response.status === 200) {
-                setAssumedNodes(response.data.nodes)
-                setAssumedEdges(response.data.edges)
+                const nodes =  response.data.nodes.map(node => ({
+                    ...node,
+                    color: theme.palette.primary.main,
+                }))
+                setAssumedNodes(nodes)
+
+                const edges = response.data.edges.map(edge => ({
+                    ...edge,
+                    color: theme.palette.secondary.contrastText,
+                }))
+                setAssumedEdges(edges)
                 if (response.data.id) fetchGeneratedGraphs(response.data.id).then(() => {});
             }
         }
@@ -55,8 +65,7 @@ export default function GraphsComparison() {
                 params: { assumedGraphId }
             });
             if (response.status === 200) {
-                setGeneratedGraphs(response.data)
-                console.log(response.data)
+                setGeneratedGraphs(response.data);
             }
         }
         catch (error) {
@@ -81,11 +90,99 @@ export default function GraphsComparison() {
 
     const handleGraphChange = (graphId: number) => {
         setSelectedGraphId(graphId);
-        const nodes  = generatedGraphs.find(g => g.id == graphId)?.nodes
-        if (nodes) setGeneratedNodes(nodes)
+        const generatedGraph = generatedGraphs.find(g => g.id === graphId);
+        const generatedNodes = generatedGraph?.nodes || [];
+        const generatedEdges = generatedGraph?.edges || [];
 
-        const edges  = generatedGraphs.find(g => g.id == graphId)?.edges
-        if (edges) setGeneratedEdges(edges)
+        const updatedAssumedNodes = assumedNodes.map(assumedNode => {
+            // console.log(assumedNode);
+            // console.log(generatedNodes);
+            const correspondingGeneratedNode = generatedNodes.find(node => node.title === assumedNode.title);
+            if (!correspondingGeneratedNode) {
+                return { ...assumedNode, color: theme.palette.error.main };
+            } else {
+                const assumedNodeEdges = assumedEdges.filter(
+                    edge => edge.source.title === assumedNode.title || edge.target.title === assumedNode.title
+                );
+                const generatedNodeEdges = generatedEdges.filter(
+                    edge => edge.source === assumedNode.title || edge.target === assumedNode.title
+                );
+
+                const hasDifferentEdges = assumedNodeEdges.some(
+                    assumedEdge =>
+                        !generatedNodeEdges.find(
+                            generatedEdge =>
+                                generatedEdge.source === assumedEdge.source.title &&
+                                generatedEdge.target === assumedEdge.target.title
+                        )
+                );
+
+                if (hasDifferentEdges) {
+                    return { ...assumedNode, color: theme.palette.primary.light };
+                }
+                return { ...assumedNode, color: theme.palette.primary.main };
+            }
+
+        });
+
+        const updatedAssumedEdges = assumedEdges.map(assumedEdge => {
+            const correspondingGeneratedEdge = generatedEdges.find(edge => {
+                    return edge.source == assumedEdge.source.title && edge.target == assumedEdge.target.title
+                }
+
+            );
+            if (!correspondingGeneratedEdge) {
+                return { ...assumedEdge, color: theme.palette.error.main, source: assumedEdge.source.title, target: assumedEdge.target.title };
+            }
+            return { ...assumedEdge, color: theme.palette.secondary.contrastText, source: assumedEdge.source.title, target: assumedEdge.target.title };
+        });
+
+        const updatedGeneratedNodes = generatedNodes.map(generatedNode => {
+            const correspondingAssumedNode = assumedNodes.find(node => node.title === generatedNode.title);
+            if (correspondingAssumedNode) {
+
+                const assumedNodeEdges = assumedEdges.filter(
+                    edge => edge.source.title === generatedNode.title || edge.target.title === generatedNode.title
+                );
+                const generatedNodeEdges = generatedEdges.filter(
+                    edge => edge.source === generatedNode.title || edge.target === generatedNode.title
+                );
+
+                const hasDifferentEdges = assumedNodeEdges.some(
+                    assumedEdge =>
+                        !generatedNodeEdges.find(
+                            generatedEdge =>
+                                generatedEdge.source === assumedEdge.source.title &&
+                                generatedEdge.target === assumedEdge.target.title
+                        )
+                );
+
+                if (hasDifferentEdges) {
+                    return { ...generatedNode, color: theme.palette.primary.light };
+                }
+            }
+            return { ...generatedNode, color: theme.palette.primary.main };
+        });
+
+        const updatedGeneratedEdges = generatedEdges.map(generatedEdge => {
+            const correspondingAssumedEdge = assumedEdges.find(edge => {
+
+                    return edge.source.title === generatedEdge.source && edge.target.title === generatedEdge.target
+                }
+            );
+            if (!correspondingAssumedEdge) {
+                return { ...generatedEdge, color: theme.palette.error.main};
+            }
+
+            return { ...generatedEdge, color: theme.palette.secondary.contrastText};
+        });
+        console.log(generatedEdges);
+        console.log(updatedGeneratedEdges);
+
+        setAssumedNodes(updatedAssumedNodes);
+        setAssumedEdges(updatedAssumedEdges);
+        setGeneratedNodes(updatedGeneratedNodes);
+        setGeneratedEdges(updatedGeneratedEdges);
     }
 
     return (

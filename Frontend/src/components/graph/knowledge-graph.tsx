@@ -15,8 +15,11 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("width", "100%")
             .attr("height", "100%");
 
-        svg.append("defs").append("marker")
-            .attr("id", "arrow")
+        svg.append("defs").selectAll("marker")
+            .data(links)
+            .enter()
+            .append("marker")
+            .attr("id", (d) => `arrow-${d.id}`)
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 8)
             .attr("refY", 0)
@@ -25,13 +28,13 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("orient", "auto")
             .append("path")
             .attr("d", "M0,-5L10,0L0,5")
-            .attr("fill", "#040303");
+            .attr("fill", d => d.color);
 
         const g = svg.append("g");
 
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.title).distance(150))
-            .force("charge", d3.forceManyBody().strength(-200))
+            .force("link", d3.forceLink(links).id(d => d.title).distance(200))
+            .force("charge", d3.forceManyBody().strength(-1000))
             .force("center", d3.forceCenter(svgRef.current.clientWidth / 2, svgRef.current.clientHeight / 2));
 
 
@@ -61,7 +64,7 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("height", d => d.bboxHeight)
             .attr("x", d => -d.bboxWidth / 2)
             .attr("y", d => -d.bboxHeight / 2)
-            .attr("fill", theme.palette.primary.main)
+            .attr("fill", d => d.color)
             .attr("rx", 5)
             .attr("ry", 5);
 
@@ -70,11 +73,26 @@ export default function KnowledgeGraph ({nodes, links}) {
             .data(links)
             .enter()
             .append("line")
-            .attr("stroke", theme.palette.secondary.contrastText)
+            .attr("stroke", e => e.color)
             .attr("stroke-width", 2)
-            .attr("marker-end", "url(#arrow)");
+            .attr("marker-end", (d) => `url(#arrow-${d.id})`);
 
-        // Ažuriraj pozicije tokom simulacije
+        const initialZoom = ()=> {
+            const bounds = g.node().getBBox();
+            const fullWidth = svgRef.current.clientWidth;
+            const fullHeight = svgRef.current.clientHeight;
+            const width = bounds.width;
+            const height = bounds.height;
+            const midX = bounds.x + width / 2;
+            const midY = bounds.y + height / 2;
+
+            const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
+            const transform = d3.zoomIdentity
+                .translate(fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY)
+                .scale(scale);
+
+            svg.call(zoom.transform, transform);
+        }
         simulation.on("tick", () => {
             link.each(function(d) {
                 const { x1, y1, x2, y2 } = getEdgeCoordinates(d.source, d.target);
@@ -89,22 +107,8 @@ export default function KnowledgeGraph ({nodes, links}) {
                 .attr("transform", d => `translate(${d.x},${d.y})`);
 
             if (!hasZoomed) {
-                // Calculate initial zoom after the first few ticks
-                const bounds = g.node().getBBox();
-                const fullWidth = svgRef.current.clientWidth;
-                const fullHeight = svgRef.current.clientHeight;
-                const width = bounds.width;
-                const height = bounds.height;
-                const midX = bounds.x + width / 2;
-                const midY = bounds.y + height / 2;
-
-                const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
-                const transform = d3.zoomIdentity
-                    .translate(fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY)
-                    .scale(scale);
-
-                svg.call(zoom.transform, transform);
-                hasZoomed = true; // Ensure this runs only once
+                initialZoom();
+                hasZoomed = true;
             }
         });
 
@@ -166,6 +170,7 @@ export default function KnowledgeGraph ({nodes, links}) {
 
         return { x1, y1, x2, y2 };
     }
+
 
 
     return (<svg ref={svgRef}></svg>);

@@ -21,7 +21,7 @@ export interface Test {
 
 
 export interface Question {
-    id: number;
+    id?: number;
     text: string;
     is_multichoice?: boolean;
     node_id?: number;
@@ -49,12 +49,14 @@ export interface Result {
 export interface Node {
     id?: number;
     title: string;
+    color: string;
 }
 
 export interface Edge {
     id?: number;
     source: string;
     target: string;
+    color: string;
 }
 
 export interface Graph {

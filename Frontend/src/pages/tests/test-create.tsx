@@ -6,7 +6,7 @@ import {
     Button,
     TextField,
     Switch,
-    IconButton, FormControl, InputLabel, Select, MenuItem,
+    IconButton, FormControl, InputLabel, Select, MenuItem, useTheme,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import './tests.css';
@@ -32,17 +32,28 @@ export default function TestCreate() {
 
     const [availableEdges, setAvailableEdges] = useState<Edge[]>([]);
 
+    const theme = useTheme();
+
     useEffect(() => {
         fetchGraphs().then(() => {});
     }, []);
 
     const fetchGraphs = async () => {
         try {
-            // const author_id = 1;
             const response = await api.get<Graph[]>(`get-graphs`);
             if (response.status === 200) {
-                setAvailableGraphs(response.data);
-
+                const updatedGraphs = response.data.map(graph => ({
+                    ...graph,
+                    nodes: graph.nodes.map(node => ({
+                        ...node,
+                        color: theme.palette.primary.main,
+                    })),
+                    edges: graph.edges.map(edge => ({
+                        ...edge,
+                        color: theme.palette.secondary.contrastText,
+                    })),
+                }));
+                setAvailableGraphs(updatedGraphs);
             }
         }
         catch (error) {
