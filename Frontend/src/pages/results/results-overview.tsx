@@ -5,20 +5,23 @@ import {Result} from "../../model/models.tsx";
 import api from "../../config/axios-config.tsx";
 import {formatTimestamp} from "../../utils/converter.tsx";
 import {useNavigate} from "react-router-dom";
+import {useUser} from "../../context/user-context.tsx";
 
 
 export default function ResultsOverview() {
 
     const navigate = useNavigate();
     const [results, setResults] = useState<Result[]>([]);
+    const { user } = useUser();
 
     useEffect(() => {
         fetchResults().then(() => {})
     }, []);
 
     const fetchResults = async () => {
+        if (!user) return;
         try {
-            const studentId = 2;
+            const studentId = user.id;
             const response = await api.get<Result[]>(`get-results`, {
                 params: { studentId: studentId }
             });

@@ -6,7 +6,7 @@ import {useUser} from "../../context/user-context.tsx";
 
 export default function Navbar() {
     const navigate = useNavigate();
-    const { setUser } = useUser();
+    const { user, setUser } = useUser();
     const handleTests = () => { navigate("/tests"); }
     const handleGraph = () => { navigate("/graph-drawing"); }
     const handleLogOut = () => {
@@ -27,7 +27,7 @@ export default function Navbar() {
                     onClick={() => handleTests()}>
                     Tests
                 </Button>
-                <Button
+                {user.role === "teacher" && <Button
                     className='nav-bar-button'
                     sx={{
                         color: "primary.contrastText",
@@ -35,9 +35,9 @@ export default function Navbar() {
                     }}
                     onClick={() => handleGraph()}>
                     Graph
-                </Button>
+                </Button>}
 
-                <Button
+                {user.role === "student" && <Button
                     className='nav-bar-button'
                     sx={{
                         color: "primary.contrastText",
@@ -45,7 +45,7 @@ export default function Navbar() {
                     }}
                     onClick={() => handleResults()}>
                     Results
-                </Button>
+                </Button>}
 
                 <Button
                     className='nav-bar-button'

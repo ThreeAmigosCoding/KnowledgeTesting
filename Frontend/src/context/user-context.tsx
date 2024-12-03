@@ -1,5 +1,6 @@
-import { createContext, useState, useContext, ReactNode } from 'react';
+import {createContext, useState, useContext, ReactNode, useEffect} from 'react';
 import {User} from "../model/models.tsx";
+import {userFromToken} from "../services/auth-service.ts";
 
 
 interface UserContextProps {
@@ -13,7 +14,16 @@ const UserContext = createContext<UserContextProps>({
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        const token = localStorage.getItem('token');
+        return token ? userFromToken(token) : null;
+    });
+
+    useEffect(() => {
+        if (!user) {
+            localStorage.removeItem('token');
+        }
+    }, [user]);
 
     return (
         <UserContext.Provider value={{ user, setUser }}>
