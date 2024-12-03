@@ -13,6 +13,7 @@ export default function Navbar() {
         setUser(null);
         navigate("/login");
     }
+    const handleResults = () => { navigate("/results"); }
 
     return (
         <Box>
@@ -41,11 +42,22 @@ export default function Navbar() {
                     sx={{
                         color: "primary.contrastText",
                         fontSize: "medium",
+                    }}
+                    onClick={() => handleResults()}>
+                    Results
+                </Button>
+
+                <Button
+                    className='nav-bar-button'
+                    sx={{
+                        color: "primary.contrastText",
+                        fontSize: "medium",
                         marginLeft: "auto"
                     }}
                     onClick={() => handleLogOut()}>
                     Log Out
                 </Button>
+
             </Box>
             <Outlet/>
         </Box>

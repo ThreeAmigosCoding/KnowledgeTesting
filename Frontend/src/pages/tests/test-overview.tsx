@@ -20,24 +20,9 @@ export default function TestOverview() {
 
     useEffect(() => {
         fetchTest().then(() => {});
-        fetchQuestions().then(() => {});
     }, []);
 
-    const fetchQuestions = async () => {
-        try {
-            const test_id = id?.valueOf()
-            const response = await api.get<Question[]>(`test-questions`, {
-                params: { test_id }
-            });
-            if (response.status === 200) {
-                setQuestions(response.data);
-            }
-        }
-        catch (error) {
-            alert(error)
-        }
-    }
-
+    
     const fetchTest = async () => {
         try {
             const test_id = id?.valueOf()
@@ -46,6 +31,7 @@ export default function TestOverview() {
             });
             if (response.status === 200) {
                 setTest(response.data);
+                setQuestions(response.data.questions as Question[]);
             }
         }
         catch (error) {

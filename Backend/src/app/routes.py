@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .services import test_service, graph_service, user_service
+from .services import test_service, graph_service, user_service, result_service
 from .utils.auth import authorize
 
 main = Blueprint('main', __name__)
@@ -13,12 +13,12 @@ def get_tests():
     return test_service.get_tests(author_id)
 
 
-@main.route('/test-questions', methods=['GET'])
-def get_test_questions():
-    test_id = request.args.get('test_id', type=int)
-    if test_id is None:
-        return jsonify({"error": "test_id is required"}), 400
-    return test_service.get_test_questions(test_id)
+# @main.route('/test-questions', methods=['GET'])
+# def get_test_questions():
+#     test_id = request.args.get('test_id', type=int)
+#     if test_id is None:
+#         return jsonify({"error": "test_id is required"}), 400
+#     return test_service.get_test_questions(test_id)
 
 
 @main.route('/test', methods=['GET'])
@@ -71,3 +71,18 @@ def login():
 @main.route('/register', methods=['POST'])
 def register():
     return user_service.register(request.json)
+
+@main.route('get-results', methods=['GET'])
+def get_results():
+    student_id = request.args.get('studentId', type=int)
+    if student_id is None:
+        return jsonify({"error": "studentId is required"}), 400
+    return result_service.get_results(student_id)
+
+
+@main.route('get-result', methods=['GET'])
+def get_result():
+    result_id = request.args.get('resultId', type=int)
+    if result_id is None:
+        return jsonify({"error": "resultId is required"}), 400
+    return result_service.get_result(result_id)
