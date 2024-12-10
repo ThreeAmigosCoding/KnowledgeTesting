@@ -13,22 +13,7 @@ export default function GraphDrawing(){
     const [sourceNodeTitle, setSourceNodeTitle] = useState<string>("");
     const [targetNodeTitle, setTargetNodeTitle] = useState<string>("");
 
-    const theme = useTheme()
-
-    useEffect(() => {
-        const newNodes = [
-            { title: "AA" },
-            { title: "BB" },
-            { id: 123, title: "CC" },
-        ];
-        const newLinks = [
-            { id: 123, source: "AA", target: "BB" },
-            { source: "BB", target: "CC" },
-        ];
-
-        setNodes(newNodes);
-        setLinks(newLinks);
-    }, []);
+    const theme = useTheme();
 
     useEffect(() => {
         console.log(links)
@@ -43,7 +28,7 @@ export default function GraphDrawing(){
             return;
         }
 
-        const newNode = { title: nodeTitle };
+        const newNode = { title: nodeTitle, color: theme.palette.primary.main };
         setNodes((prevNodes) => [...prevNodes, newNode]);
         setNodeTitle("");
     };
@@ -79,7 +64,7 @@ export default function GraphDrawing(){
             return;
         }
 
-        const newLink: Edge = { source: sourceNodeTitle, target: targetNodeTitle };
+        const newLink: Edge = { source: sourceNodeTitle, target: targetNodeTitle, color: theme.palette.secondary.contrastText };
         setLinks((prevLinks) => [...prevLinks, newLink]);
         setSourceNodeTitle("");
         setTargetNodeTitle("");
@@ -137,7 +122,7 @@ export default function GraphDrawing(){
                     />
                     <Button
                         sx={{
-                            fontSize: "large",
+                            fontSize: "medium",
                             textTransform: "capitalize"
                         }}
                         id="add-node-button"
@@ -148,7 +133,7 @@ export default function GraphDrawing(){
                     </Button>
                     <Button
                         sx={{
-                            fontSize: "large",
+                            fontSize: "medium",
                             textTransform: "capitalize"
                         }}
                         id="remove-node-button"
@@ -175,8 +160,9 @@ export default function GraphDrawing(){
                     />
                     <Button
                         sx={{
-                            fontSize: "large",
-                            textTransform: "capitalize"
+                            fontSize: "medium",
+                            textTransform: "capitalize",
+                            minWidth: "160px"
                         }}
                         id="add-edge-button"
                         variant="contained" color="primary"
@@ -186,8 +172,9 @@ export default function GraphDrawing(){
                     </Button>
                     <Button
                         sx={{
-                            fontSize: "large",
-                            textTransform: "capitalize"
+                            fontSize: "medium",
+                            textTransform: "capitalize",
+                            minWidth: "160px"
                         }}
                         id="remove-edge-button"
                         variant="contained" color="error"

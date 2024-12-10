@@ -1,18 +1,25 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import {useTheme} from "@mui/material";
 
+
 export default function KnowledgeGraph ({nodes, links}) {
     const svgRef = useRef();
     const theme = useTheme();
+    let hasZoomed = false;
 
     useEffect(() => {
         const svg = d3.select(svgRef.current)
             .attr("width", "100%")
             .attr("height", "100%");
 
-        svg.append("defs").append("marker")
-            .attr("id", "arrow")
+        svg.append("defs").selectAll("marker")
+            .data(links)
+            .enter()
+            .append("marker")
+            .attr("id", (d) => `arrow-${d.id}`)
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 8)
             .attr("refY", 0)
@@ -21,15 +28,17 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("orient", "auto")
             .append("path")
             .attr("d", "M0,-5L10,0L0,5")
-            .attr("fill", "#040303");
+            .attr("fill", d => d.color);
+
+        const g = svg.append("g");
 
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.title).distance(150))
-            .force("charge", d3.forceManyBody().strength(-200))
-            .force("center", d3.forceCenter(400, 300));
+            .force("link", d3.forceLink(links).id(d => d.title).distance(200))
+            .force("charge", d3.forceManyBody().strength(-1000))
+            .force("center", d3.forceCenter(svgRef.current.clientWidth / 2, svgRef.current.clientHeight / 2));
 
 
-        const nodeGroup = svg.append("g")
+        const nodeGroup = g.append("g")
             .selectAll("g")
             .data(nodes)
             .enter()
@@ -55,20 +64,35 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("height", d => d.bboxHeight)
             .attr("x", d => -d.bboxWidth / 2)
             .attr("y", d => -d.bboxHeight / 2)
-            .attr("fill", theme.palette.primary.main)
+            .attr("fill", d => d.color)
             .attr("rx", 5)
             .attr("ry", 5);
 
-        const link = svg.append("g")
+        const link = g.append("g")
             .selectAll("line")
             .data(links)
             .enter()
             .append("line")
-            .attr("stroke", theme.palette.secondary.contrastText)
+            .attr("stroke", e => e.color)
             .attr("stroke-width", 2)
-            .attr("marker-end", "url(#arrow)");
+            .attr("marker-end", (d) => `url(#arrow-${d.id})`);
 
-        // Ažuriraj pozicije tokom simulacije
+        const initialZoom = ()=> {
+            const bounds = g.node().getBBox();
+            const fullWidth = svgRef.current.clientWidth;
+            const fullHeight = svgRef.current.clientHeight;
+            const width = bounds.width;
+            const height = bounds.height;
+            const midX = bounds.x + width / 2;
+            const midY = bounds.y + height / 2;
+
+            const scale = 0.8 / Math.max(width / fullWidth, height / fullHeight);
+            const transform = d3.zoomIdentity
+                .translate(fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY)
+                .scale(scale);
+
+            svg.call(zoom.transform, transform);
+        }
         simulation.on("tick", () => {
             link.each(function(d) {
                 const { x1, y1, x2, y2 } = getEdgeCoordinates(d.source, d.target);
@@ -81,7 +105,20 @@ export default function KnowledgeGraph ({nodes, links}) {
 
             nodeGroup
                 .attr("transform", d => `translate(${d.x},${d.y})`);
+
+            if (!hasZoomed) {
+                initialZoom();
+                hasZoomed = true;
+            }
         });
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 5]) // Set zoom range
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
 
         return () => {
             svg.selectAll('*').remove();
@@ -133,6 +170,7 @@ export default function KnowledgeGraph ({nodes, links}) {
 
         return { x1, y1, x2, y2 };
     }
+
 
 
     return (<svg ref={svgRef}></svg>);

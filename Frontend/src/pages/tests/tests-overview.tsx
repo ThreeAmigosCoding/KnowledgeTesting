@@ -4,11 +4,14 @@ import api from "../../config/axios-config.tsx";
 import {useEffect, useState} from "react";
 import {Test} from "../../model/models.tsx";
 import {useNavigate} from "react-router-dom";
+import {useUser} from "../../context/user-context.tsx";
 
 export default function TestsOverview() {
 
     const navigate = useNavigate();
     const [tests, setTests] = useState<Test[]>([]);
+
+    const {user} = useUser();
 
     useEffect(() => {
         fetchTests().then(() => {})
@@ -40,10 +43,10 @@ export default function TestsOverview() {
     return (
         <Box className='main-container'>
             <Box className='content'>
-                <Typography variant='h1'>Tests</Typography>
-                <Button
+                <Typography variant='h1' sx={{textAlign: 'center'}}>Tests</Typography>
+                {user.role === "teacher" && <Button
                     sx={{
-                        fontSize: "x-large",
+                        fontSize: "large",
                         textTransform: "capitalize",
                         maxWidth: "300px"
                     }}
@@ -51,17 +54,17 @@ export default function TestsOverview() {
                     variant="contained" color="primary"
                     onClick={openTestCreate}>
                     Create Test
-                </Button>
+                </Button>}
                 <Box className="tests-container">
                     {tests.map((test) => (
                         <Card
                             key={test.id}
                             className="test-card"
-                            onClick={() => openTest(test.id)}>
+                            onClick={() => openTest(test.id as number)}>
                             <CardContent className="test-card-content">
                                 <Typography variant="h2">{test.title}</Typography>
                                 <Typography variant="h3">
-                                    Author: {test.author.first_name} {test.author.last_name}
+                                    Author: {test.author?.first_name} {test.author?.last_name}
                                 </Typography>
                                 <Typography variant="h4">
                                     Questions: {test.questions.length}

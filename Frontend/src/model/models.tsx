@@ -1,10 +1,10 @@
 export interface User {
     id: number;
-    first_name: string;
-    last_name: string;
+    first_name?: string;
+    last_name?: string;
     email: string;
-    role: 'teacher' | 'student' | 'expert';
-    password: string;
+    role: 'teacher' | 'student' ;
+    password?: string;
 }
 
 
@@ -40,19 +40,23 @@ export interface Result {
     id: number;
     test: Test;
     student: User;
-    answers: Answer[];
+    student_answers: Record<number, number[]>;
+    is_used: boolean;
+    timestamp: string;
 }
 
 
 export interface Node {
     id?: number;
     title: string;
+    color: string;
 }
 
 export interface Edge {
     id?: number;
     source: string;
     target: string;
+    color: string;
 }
 
 export interface Graph {
@@ -61,3 +65,11 @@ export interface Graph {
     nodes: Node[];
     edges: Edge[];
 }
+
+export interface TestSubmission {
+    test_id: number,
+    student_id: number,
+    answers: number[]
+}
+
+

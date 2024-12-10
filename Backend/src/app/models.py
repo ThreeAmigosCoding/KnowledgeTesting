@@ -1,5 +1,7 @@
 from .database import db
 from sqlalchemy.orm import relationship
+from datetime import datetime
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -7,7 +9,7 @@ class User(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    role = db.Column(db.Enum('teacher', 'student', 'expert', name="user_roles"), nullable=False)
+    role = db.Column(db.Enum('teacher', 'student', name="user_roles"), nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
     tests_created = relationship('Test', back_populates='author')
@@ -24,7 +26,6 @@ class Test(db.Model):
 
     author = relationship('User', back_populates='tests_created')
     questions = relationship('Question', back_populates='test')
-    graph = relationship('Graph')
 
 
 class Question(db.Model):
@@ -58,6 +59,8 @@ class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     test_id = db.Column(db.Integer, db.ForeignKey('tests.id'), nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    is_used = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     test = relationship('Test')
     student = relationship('User', back_populates='test_results')
@@ -74,13 +77,16 @@ class StudentAnswer(db.Model):
     result = relationship('Result', back_populates='student_answers')
     answer = relationship('Answer')
 
+
 class Graph(db.Model):
     __tablename__ = 'graphs'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
+    related_graph_id = db.Column(db.Integer, db.ForeignKey('graphs.id'), nullable=True)
 
     nodes = relationship('Node', back_populates='graph')
     edges = relationship('Edge', back_populates='graph')
+
 
 class Node(db.Model):
     __tablename__ = 'nodes'
@@ -89,6 +95,7 @@ class Node(db.Model):
     graph_id = db.Column(db.Integer, db.ForeignKey('graphs.id'), nullable=False)
 
     graph = relationship('Graph', back_populates='nodes')
+
 
 class Edge(db.Model):
     __tablename__ = 'edges'
@@ -100,4 +107,3 @@ class Edge(db.Model):
     source = relationship('Node', foreign_keys=[source_id])
     target = relationship('Node', foreign_keys=[target_id])
     graph = relationship('Graph')
-

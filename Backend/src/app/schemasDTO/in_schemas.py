@@ -52,3 +52,9 @@ class TestSchemaInput(Schema):
 
     class Meta:
         unknown = "exclude"
+
+
+class TestSubmissionSchemaInput(Schema):
+    test_id = fields.Int(required=True)
+    student_id = fields.Int(required=True)
+    answers = fields.List(fields.Int(), required=True)

@@ -3,9 +3,10 @@ from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 
 from ..database import db
-from ..models import Test, Question, Answer
+from ..models import Test, Question, Answer, Result, StudentAnswer
 from ..schemas import TestSchema, QuestionSchema
-from ..schemasDTO.in_schemas import TestSchemaInput
+from ..schemasDTO.in_schemas import TestSchemaInput, TestSubmissionSchemaInput
+from .graph_service import generate_real_graph
 
 
 def get_tests(author_id):
@@ -14,10 +15,10 @@ def get_tests(author_id):
     return jsonify(test_schema.dump(tests))
 
 
-def get_test_questions(test_id):
-    questions = Question.query.filter(Question.test_id == test_id).all()
-    question_schema = QuestionSchema(many=True)
-    return jsonify(question_schema.dump(questions))
+# def get_test_questions(test_id):
+#     questions = Question.query.filter(Question.test_id == test_id).all()
+#     question_schema = QuestionSchema(many=True)
+#     return jsonify(question_schema.dump(questions))
 
 
 def get_test_by_id(test_id):
@@ -65,3 +66,31 @@ def create_test(request_body):
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+
+def submit_test(request_body):
+    schema = TestSubmissionSchemaInput()
+    try:
+        data = schema.load(request_body)
+    except ValidationError as err:
+        return jsonify({"errors": err.messages}), 400
+
+    test_id = data['test_id']
+    student_id = data['student_id']
+    answers = data['answers']
+
+    result = Result(test_id=test_id, student_id=student_id)
+    db.session.add(result)
+    db.session.flush()
+
+    for answer_id in answers:
+        student_answer = StudentAnswer(result_id=result.id, answer_id=answer_id)
+        db.session.add(student_answer)
+
+    db.session.commit()
+
+    # matrix, node_map = create_knowledge_matrix(test_id)
+    # print(f'Matrix: {matrix} \nNode Map: {node_map}')
+    generate_real_graph(test_id)
+
+    return jsonify({"message": "Test submitted successfully"}), 201
