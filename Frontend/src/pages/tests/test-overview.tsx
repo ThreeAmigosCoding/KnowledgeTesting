@@ -93,25 +93,46 @@ export default function TestOverview() {
         navigate(`/graphs-comparison/${id}`);
     };
 
+    const openResults = () => {
+        navigate(`/results/${id}`);
+    };
+
     return (
         <Box className='main-container'>
             <Box className='content'>
                 <Typography variant='h1' sx={{textAlign: 'center'}}>{test?.title}</Typography>
                 {user && user.role === "teacher" && (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                            fontSize: "medium",
-                            textTransform: "capitalize",
-                            maxWidth: "300px"
-                        }}
-                        onClick={openGraphsComparison}
-                    >
-                        Graphs
-                    </Button>
+                    <Box className='top-buttons-container'>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize",
+                                maxWidth: "300px"
+                            }}
+                            onClick={openGraphsComparison}
+                        >
+                            Graphs
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize",
+                                maxWidth: "300px"
+                            }}
+                            onClick={openResults}
+                        >
+                            Results
+                        </Button>
+                    </Box>
                 )}
                 <Box className="questions-container">
+                    {user && user.role === "teacher" && (
+                        <Typography variant='h2'>Questions</Typography>
+                    )}
                     {questions.map((question) => (
                         <Card key={question.id} className="question-container">
                             <CardContent className="question-card-content">

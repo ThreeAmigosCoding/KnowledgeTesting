@@ -1,5 +1,6 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, ValidationError
 from ..models import Graph, Node, Edge
+from datetime import datetime
 
 
 class NodeSchemaInput(Schema):
@@ -58,3 +59,13 @@ class TestSubmissionSchemaInput(Schema):
     test_id = fields.Int(required=True)
     student_id = fields.Int(required=True)
     answers = fields.List(fields.Int(), required=True)
+
+
+
+class GeneratedGraphSchemaInput(Schema):
+    test_id = fields.Int(required=True)
+    start_date = fields.Float(required=True)
+    end_date = fields.Float(required=True)
+
+    class Meta:
+        unknown = "exclude"

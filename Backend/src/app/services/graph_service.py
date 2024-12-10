@@ -1,12 +1,14 @@
 import pandas as pd
 from flask import jsonify
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import between
 from sqlalchemy.orm import joinedload
 from learning_spaces.kst import iita
-
+from marshmallow import ValidationError
 from ..models import db, Graph, Node, Edge, Result, Answer, StudentAnswer, Question, Test
-from ..schemasDTO.in_schemas import GraphSchemaInput
+from ..schemasDTO.in_schemas import GraphSchemaInput, GeneratedGraphSchemaInput
 from ..schemas import GraphSchema
+from datetime import datetime
 
 
 def save_graph(request_body):
@@ -64,8 +66,11 @@ def get_generated_graphs(related_graph_id):
     return jsonify(graph_schema.dump(graphs)), 200
 
 
-def create_knowledge_matrix(test_id):
-    results = Result.query.filter_by(test_id=test_id, is_used=False).all()
+def create_knowledge_matrix(test_id, start_date, end_date):
+    results = Result.query.filter(
+        Result.test_id == test_id,
+        Result.timestamp.between(start_date, end_date)
+    ).all()
 
     questions = Question.query.filter_by(test_id=test_id).all()
     node_map = {question.id: question.node_id for question in questions}
@@ -157,10 +162,22 @@ def create_graph_from_relations(relations, test_id):
     return new_graph
 
 
-def generate_real_graph(test_id):
-    matrix, node_index_map = create_knowledge_matrix(test_id)
+def generate_real_graph(request_body):
+    schema = GeneratedGraphSchemaInput()
+    try:
+        data = schema.load(request_body)
+    except ValidationError as err:
+        return jsonify({"errors": err.messages}), 400
+
+    test_id = data['test_id']
+    start_date = datetime.fromtimestamp(data['start_date'])
+    end_date = datetime.fromtimestamp(data['end_date'])
+
+    matrix, node_index_map = create_knowledge_matrix(test_id, start_date, end_date)
 
     relations = analyze_responses(matrix, node_index_map)
 
     create_graph_from_relations(relations, test_id)
+
+    return jsonify({"message": "Graph generated successfully"}), 200
 

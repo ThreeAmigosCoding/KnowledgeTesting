@@ -46,6 +46,7 @@ class ResultSchema(SQLAlchemyAutoSchema):
         include_relationships = True
 
     test = fields.Nested(TestSchema)
+    student = fields.Nested(UserSchema, only=('first_name', 'last_name',))
     student_answers = fields.Method("get_student_answers")
 
     def get_student_answers(self, obj):

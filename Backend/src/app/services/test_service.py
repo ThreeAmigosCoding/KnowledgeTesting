@@ -89,8 +89,4 @@ def submit_test(request_body):
 
     db.session.commit()
 
-    # matrix, node_map = create_knowledge_matrix(test_id)
-    # print(f'Matrix: {matrix} \nNode Map: {node_map}')
-    generate_real_graph(test_id)
-
     return jsonify({"message": "Test submitted successfully"}), 201
