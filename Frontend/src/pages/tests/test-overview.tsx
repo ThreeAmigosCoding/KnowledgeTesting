@@ -6,6 +6,7 @@ import {Question, Test, TestSubmission} from "../../model/models.tsx";
 import {useNavigate, useParams} from "react-router-dom";
 import {useUser} from "../../context/user-context.tsx";
 
+
 export default function TestOverview() {
 
     const navigate = useNavigate();
@@ -93,23 +94,64 @@ export default function TestOverview() {
         navigate(`/graphs-comparison/${id}`);
     };
 
+    const exportToQTI = async () => {
+        try {
+            const test_id = id?.valueOf();
+
+            const response = await api.get(`export-test`, {
+                params: { test_id },
+                responseType: 'blob'
+            });
+
+            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = `${test_id}-QTI.xml`;
+            link.click();
+
+            window.URL.revokeObjectURL(link.href);
+        }
+        catch (error) {
+            alert(error)
+        }
+    }
+
     return (
         <Box className='main-container'>
             <Box className='content'>
                 <Typography variant='h1' sx={{textAlign: 'center'}}>{test?.title}</Typography>
                 {user && user.role === "teacher" && (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                            fontSize: "medium",
-                            textTransform: "capitalize",
-                            maxWidth: "300px"
-                        }}
-                        onClick={openGraphsComparison}
-                    >
-                        Graphs
-                    </Button>
+                    <Box sx={{
+                        display: "flex",
+                        gap: "10px"
+                    }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize",
+                                maxWidth: "300px"
+                            }}
+                            onClick={openGraphsComparison}
+                        >
+                            Graphs
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize",
+                                maxWidth: "300px"
+                            }}
+                            onClick={exportToQTI}
+                        >
+                            Export to QTI
+                        </Button>
+                    </Box>
                 )}
                 <Box className="questions-container">
                     {questions.map((question) => (
