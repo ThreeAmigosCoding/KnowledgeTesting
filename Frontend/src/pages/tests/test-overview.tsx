@@ -142,20 +142,6 @@ export default function TestOverview() {
                         >
                             Graphs
                         </Button>
-
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{
-                                fontSize: "medium",
-                                textTransform: "capitalize",
-                                maxWidth: "300px"
-                            }}
-
-                            onClick={exportToQTI}
-                        >
-                            Export to QTI
-                        </Button>
                   
                         <Button
                             variant="contained"
@@ -169,6 +155,20 @@ export default function TestOverview() {
                         >
                             Results
 
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize",
+                                maxWidth: "300px"
+                            }}
+
+                            onClick={exportToQTI}
+                        >
+                            Export to QTI
                         </Button>
                     </Box>
                 )}

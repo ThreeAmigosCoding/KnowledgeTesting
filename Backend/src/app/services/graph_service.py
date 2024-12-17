@@ -121,8 +121,8 @@ def analyze_responses(matrix, node_index_map):
 
 
 def create_graph_from_relations(relations, test_id):
-    related_graph_id = Test.query.with_entities(Test.graph_id).filter_by(id=test_id).scalar()
-    new_graph = Graph(title="Demo", related_graph_id=related_graph_id)
+    test = Test.query.filter(Test.id == test_id).first()
+    new_graph = Graph(title=f"{test.title} - {datetime.now().strftime("%d.%m.%Y.")}", related_graph_id=test.graph_id)
     db.session.add(new_graph)
     db.session.flush()
 
