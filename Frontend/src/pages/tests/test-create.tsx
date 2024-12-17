@@ -114,6 +114,20 @@ export default function TestCreate() {
             setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
             setNewQuestionText("");
             setNewAnswers([]);
+            setAvailableNodes((prevNodes) =>
+                prevNodes.map((node) =>
+                    node.id === selectedNodeId
+                        ? { ...node as Node, questionText: newQuestionText }
+                        : node as Node
+                )
+            );
+
+            setAvailableEdges((prevEdges) =>
+                prevEdges.map((edge) => {
+                    edge = {...edge, source: edge.source.title, target: edge.target.title};
+                    return edge as Edge;
+                })
+            )
         }
     };
 
@@ -157,9 +171,26 @@ export default function TestCreate() {
     };
 
     const deleteQuestion = (index: number) => {
+        const removedQuestion = questions[index];
         setQuestions(() =>
             getOrderedQuestions().filter((_, qIndex) => qIndex !== index)
         );
+
+        setAvailableNodes((prevNodes) =>
+            prevNodes.map((node) =>
+                node.id === removedQuestion.node_id
+                    ? { ...node as Node, questionText: null }
+                    : node as Node
+            )
+        );
+
+        setAvailableEdges((prevEdges) =>
+            prevEdges.map((edge) => {
+                edge = {...edge, source: edge.source.title, target: edge.target.title};
+                return edge as Edge;
+            })
+        );
+
     };
 
     const isAddQuestionDisabled = !(

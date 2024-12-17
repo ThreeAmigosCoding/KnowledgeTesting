@@ -51,6 +51,7 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("font-size", "18px")
             .attr("fill", theme.palette.primary.contrastText)
             .attr("dy", ".30em");
+        console.log(labels)
 
         nodeGroup.each(function(d) {
             const textElement = d3.select(this).select("text");
@@ -67,6 +68,9 @@ export default function KnowledgeGraph ({nodes, links}) {
             .attr("fill", d => d.color)
             .attr("rx", 5)
             .attr("ry", 5);
+
+        nodeGroup.append("title")
+            .text(d => d.questionText ? `Question: ${d.questionText}` : "No associated question");
 
         const link = g.append("g")
             .selectAll("line")
@@ -142,8 +146,7 @@ export default function KnowledgeGraph ({nodes, links}) {
 
         function dragended(event, d) {
             //if (!event.active) simulation.alphaTarget(0);
-            //d.fx = null;
-            //d.fy = null;
+            console.log(event, d);
         }
 
         return d3.drag()
