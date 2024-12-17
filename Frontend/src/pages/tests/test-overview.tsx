@@ -117,15 +117,19 @@ export default function TestOverview() {
         }
     }
 
+    const openResults = () => {
+        navigate(`/results/${id}`);
+    };
+
+
     return (
         <Box className='main-container'>
             <Box className='content'>
                 <Typography variant='h1' sx={{textAlign: 'center'}}>{test?.title}</Typography>
                 {user && user.role === "teacher" && (
-                    <Box sx={{
-                        display: "flex",
-                        gap: "10px"
-                    }}>
+
+                    <Box className='top-buttons-container'>
+
                         <Button
                             variant="contained"
                             color="primary"
@@ -147,13 +151,31 @@ export default function TestOverview() {
                                 textTransform: "capitalize",
                                 maxWidth: "300px"
                             }}
+
                             onClick={exportToQTI}
                         >
                             Export to QTI
                         </Button>
+                  
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize",
+                                maxWidth: "300px"
+                            }}
+                            onClick={openResults}
+                        >
+                            Results
+
+                        </Button>
                     </Box>
                 )}
                 <Box className="questions-container">
+                    {user && user.role === "teacher" && (
+                        <Typography variant='h2'>Questions</Typography>
+                    )}
                     {questions.map((question) => (
                         <Card key={question.id} className="question-container">
                             <CardContent className="question-card-content">

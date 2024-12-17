@@ -30,7 +30,8 @@ const theme = createTheme({
             main: "#DD3636"
         },
         success: {
-            main: "#3FCB4D"
+            main: "#3FCB4D",
+            light: "#7EE787",
         },
         background: {
             default: "#F0F7F4",
@@ -107,6 +108,7 @@ const router = createBrowserRouter([
             { path:"/test-create", element: <TestCreate/>},
             { path:"/graphs-comparison/:id", element: <GraphsComparison/> },
             { path:"/results", element: <ResultsOverview/> },
+            { path:"/results/:testId", element: <ResultsOverview/> },
             { path:"/result/:id", element: <ResultOverview/> }
         ]
     }

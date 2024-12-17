@@ -19,3 +19,15 @@
     flex-direction: column;
     gap: 5px;
 }
+
+.date-pickers-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.demo-container {
+    display: flex;
+    align-items: center;
+}

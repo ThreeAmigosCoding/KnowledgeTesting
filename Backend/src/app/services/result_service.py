@@ -6,8 +6,14 @@ from ..schemas import ResultSchema
 from sqlalchemy import desc
 
 
-def get_results(student_id):
+def get_results_by_student_id(student_id):
     results = Result.query.filter(Result.student_id == student_id).order_by(desc(Result.timestamp)).all()
+    result_schema = ResultSchema(many=True)
+    return jsonify(result_schema.dump(results))
+
+
+def get_results_by_test_id(test_id):
+    results = Result.query.filter(Result.test_id == test_id).order_by(desc(Result.timestamp)).all()
     result_schema = ResultSchema(many=True)
     return jsonify(result_schema.dump(results))
 

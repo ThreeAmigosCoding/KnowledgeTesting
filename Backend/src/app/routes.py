@@ -34,6 +34,11 @@ def save_graph():
     return graph_service.save_graph(request.json)
 
 
+@main.route('/generate-graph', methods=['POST'])
+def generate_graph():
+    return graph_service.generate_real_graph(request.json)
+
+
 @main.route('/create-test', methods=['POST'])
 def create_test():
     return test_service.create_test(request.json)
@@ -75,9 +80,12 @@ def register():
 @main.route('get-results', methods=['GET'])
 def get_results():
     student_id = request.args.get('studentId', type=int)
-    if student_id is None:
-        return jsonify({"error": "studentId is required"}), 400
-    return result_service.get_results(student_id)
+    test_id = request.args.get('testId', type=int)
+    if (student_id is None and test_id is None) or (test_id is not None and student_id is not None):
+        return jsonify({"error": "studentId or testId is required"}), 400
+    if student_id:
+        return result_service.get_results_by_student_id(student_id)
+    return result_service.get_results_by_test_id(test_id)
 
 
 @main.route('get-result', methods=['GET'])

@@ -109,3 +109,9 @@
     background: #3C493F;
     border-radius: 5px;
 }
+
+.top-buttons-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
