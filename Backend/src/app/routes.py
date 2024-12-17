@@ -94,3 +94,10 @@ def get_result():
     if result_id is None:
         return jsonify({"error": "resultId is required"}), 400
     return result_service.get_result(result_id)
+
+@main.route('export-test', methods=['GET'])
+def export_test():
+    test_id = request.args.get('test_id', type=int)
+    if test_id is None:
+        return jsonify({"error": "test_id is required"}), 400
+    return test_service.export_test(test_id)
