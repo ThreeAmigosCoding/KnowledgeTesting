@@ -68,6 +68,7 @@ export default function ResultOverview() {
                     return {
                         ...node,
                         color: isCorrect ? theme.palette.success.main : theme.palette.error.main,
+                        questionText: relatedQuestion.text
                     };
                 });
                 setNodes(nodes)
