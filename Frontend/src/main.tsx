@@ -106,6 +106,7 @@ const router = createBrowserRouter([
             { path:"/test/:id", element: <TestOverview/> },
             { path:"/graph-drawing", element: <GraphDrawing/>},
             { path:"/test-create", element: <TestCreate/>},
+            { path:"/test-create/:testId", element: <TestCreate/>},
             { path:"/graphs-comparison/:id", element: <GraphsComparison/> },
             { path:"/results", element: <ResultsOverview/> },
             { path:"/results/:testId", element: <ResultsOverview/> },

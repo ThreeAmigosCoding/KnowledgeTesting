@@ -43,6 +43,10 @@ def generate_graph():
 def create_test():
     return test_service.create_test(request.json)
 
+@main.route('/update-test/<int:test_id>', methods=['PUT'])
+def update_test(test_id):
+    return test_service.update_test(test_id, request.json)
+
 
 @main.route('/get-graphs', methods=['GET'])
 def get_graphs():
@@ -101,3 +105,10 @@ def export_test():
     if test_id is None:
         return jsonify({"error": "test_id is required"}), 400
     return test_service.export_test(test_id)
+
+@main.route('check-results', methods=['GET'])
+def check_results():
+    test_id = request.args.get('test_id', type=int)
+    if test_id is None:
+        return jsonify({"error": "test_id is required"}), 400
+    return test_service.check_results(test_id)

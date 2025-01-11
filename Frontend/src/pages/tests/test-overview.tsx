@@ -19,11 +19,31 @@ export default function TestOverview() {
 
     const {user} = useUser();
 
+    const [canEdit, setCanEdit] = useState<boolean>(false);
+
     useEffect(() => {
         fetchTest().then(() => {});
     }, []);
 
-    
+    useEffect(() => {
+        if (test) checkCanEdit().then(() => {});
+    }, [test]);
+
+    const checkCanEdit = async () => {
+        try {
+            const test_id = id?.valueOf()
+            const response = await api.get(`check-results`, {
+                params: { test_id }
+            });
+            if (response.status === 200) {
+                setCanEdit(true);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     const fetchTest = async () => {
         try {
             const test_id = id?.valueOf()
@@ -121,6 +141,10 @@ export default function TestOverview() {
         navigate(`/results/${id}`);
     };
 
+    const openEditTest = () => {
+        navigate(`/test-create/${id}`);
+    };
+
 
     return (
         <Box className='main-container'>
@@ -169,6 +193,20 @@ export default function TestOverview() {
                             onClick={exportToQTI}
                         >
                             Export to QTI
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                fontSize: "medium",
+                                textTransform: "capitalize",
+                                maxWidth: "300px"
+                            }}
+                            disabled={!canEdit}
+                            onClick={openEditTest}
+                        >
+                            Edit
                         </Button>
                     </Box>
                 )}

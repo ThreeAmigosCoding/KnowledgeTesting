@@ -25,6 +25,7 @@ export interface Question {
     text: string;
     is_multichoice?: boolean;
     node_id?: number;
+    node?: number;
     answers: Answer[];
 }
 
