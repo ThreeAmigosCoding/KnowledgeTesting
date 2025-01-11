@@ -26,6 +26,7 @@ class Test(db.Model):
 
     author = relationship('User', back_populates='tests_created')
     questions = relationship('Question', back_populates='test')
+    graph = relationship('Graph')
 
 
 class Question(db.Model):

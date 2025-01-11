@@ -11,10 +11,11 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import './tests.css';
 import api from "../../config/axios-config.tsx";
-import { useEffect, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import {Answer, Graph, Question, Test, Node, Edge} from "../../model/models.tsx";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import KnowledgeGraph from "../../components/graph/knowledge-graph.tsx";
+import {useUser} from "../../context/user-context.tsx";
 
 export default function TestCreate() {
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ export default function TestCreate() {
     const [newAnswerText, setNewAnswerText] = useState<string>("");
     const [newAnswers, setNewAnswers] = useState<Answer[]>([]);
     const [questions, setQuestions] = useState<Question[]>([]);
+    const [test, setTest] = useState<Test | undefined>();
 
     const [availableGraphs, setAvailableGraphs] = useState<Graph[]>([]);
     const [selectedGraphId, setSelectedGraphId] = useState<number | undefined>();
@@ -33,10 +35,95 @@ export default function TestCreate() {
     const [availableEdges, setAvailableEdges] = useState<Edge[]>([]);
 
     const theme = useTheme();
+    const { user } = useUser();
+    const { testId } = useParams<{ testId: string; }>();
+
+    const sortedNodes = useMemo(() => {
+        try {
+            const visited = new Set<string>();
+            const tempVisited = new Set<string>();
+            const result: Node[] = [];
+
+            const visit = (node: Node) => {
+                if (tempVisited.has(node.title)) {
+                    throw new Error("Graph has cycles!");
+                }
+                if (!visited.has(node.title)) {
+                    tempVisited.add(node.title);
+                    const outgoingEdges = availableEdges.filter(edge => edge.source === node.title);
+                    outgoingEdges.forEach(edge => {
+                        const targetNode = availableNodes.find(n => n.title === edge.target);
+                        if (targetNode) visit(targetNode);
+                    });
+                    tempVisited.delete(node.title);
+                    visited.add(node.title);
+                    result.push(node);
+                }
+            };
+
+            availableNodes.forEach(node => {
+                if (!visited.has(node.title)) visit(node);
+            });
+
+            return result;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }, [availableNodes, availableEdges]);
+
 
     useEffect(() => {
         fetchGraphs().then(() => {});
+        fetchTest().then(() => {});
     }, []);
+
+    useEffect(() => {
+        if (test) handleTestFetch();
+    }, [test]);
+
+    useEffect(() => {
+        if (questions.length <= 0) return;
+        setAvailableNodes((prevNodes) =>
+            prevNodes.map((node) => {
+                const question = questions.find(q => Number(q.node_id) === Number(node.id));
+                if (question) return  { ...node as Node, questionText: question.text }
+                else return node as Node
+            }
+            )
+        );
+
+        setAvailableEdges((prevEdges) =>
+            prevEdges.map((edge) => {
+                if (edge.source.title) edge = {...edge, source: edge.source.title, target: edge.target.title};
+                else edge = {...edge, source: edge.source, target: edge.target};
+                return edge as Edge;
+            })
+        )
+    }, [questions]);
+
+    const handleTestFetch = () => {
+        setSelectedGraphId(test.graph);
+        setQuestions(test.questions as Question[]);
+        setTestTitle(test.title);
+    }
+
+    const fetchTest = async () => {
+
+        try {
+            const test_id = testId?.valueOf()
+            if (!test_id) return;
+            const response = await api.get<Test>(`test`, {
+                params: { test_id }
+            });
+            if (response.status === 200) {
+                setTest(response.data);
+            }
+        }
+        catch (error) {
+            alert(error)
+        }
+    }
 
     const fetchGraphs = async () => {
         try {
@@ -114,20 +201,7 @@ export default function TestCreate() {
             setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
             setNewQuestionText("");
             setNewAnswers([]);
-            setAvailableNodes((prevNodes) =>
-                prevNodes.map((node) =>
-                    node.id === selectedNodeId
-                        ? { ...node as Node, questionText: newQuestionText }
-                        : node as Node
-                )
-            );
 
-            setAvailableEdges((prevEdges) =>
-                prevEdges.map((edge) => {
-                    edge = {...edge, source: edge.source.title, target: edge.target.title};
-                    return edge as Edge;
-                })
-            )
         }
     };
 
@@ -162,34 +236,20 @@ export default function TestCreate() {
 
 
     const getOrderedQuestions = () => {
-        const sortedNodes = topologicalSort();
+        // const sortedNodes = topologicalSort();
         const nodeOrder = sortedNodes.map(node => node.id);
-
+        console.log("Node order", nodeOrder)
         return questions.slice().sort((a, b) => {
-            return nodeOrder.indexOf(a.node_id) - nodeOrder.indexOf(b.node_id);
+            return nodeOrder.indexOf(b.node_id) - nodeOrder.indexOf(a.node_id);
         });
     };
 
-    const deleteQuestion = (index: number) => {
-        const removedQuestion = questions[index];
+    const deleteQuestion = (question: Question) => {
         setQuestions(() =>
-            getOrderedQuestions().filter((_, qIndex) => qIndex !== index)
+            getOrderedQuestions().filter((q) => q.node_id !== question.node_id)
         );
 
-        setAvailableNodes((prevNodes) =>
-            prevNodes.map((node) =>
-                node.id === removedQuestion.node_id
-                    ? { ...node as Node, questionText: null }
-                    : node as Node
-            )
-        );
 
-        setAvailableEdges((prevEdges) =>
-            prevEdges.map((edge) => {
-                edge = {...edge, source: edge.source.title, target: edge.target.title};
-                return edge as Edge;
-            })
-        );
 
     };
 
@@ -210,14 +270,15 @@ export default function TestCreate() {
         try {
             const test: Test = {
                 title: testTitle,
-                author_id: 1, // TODO FIX THIS
+                author_id: user.id,
                 graph_id: selectedGraphId,
                 questions: questions
             }
-            const response = await api.post<Test>(`create-test`, test);
-            if (response.status === 201) {
-                alert("Test created successfully.")
-                navigate("/")
+            const response = testId ? await api.put<Test>(`update-test/${testId}`, test)
+                : await api.post<Test>(`create-test`, test);
+            if (response.status === 201 || response.status === 200) {
+                alert("Test saved successfully.")
+                navigate("/tests")
             }
         }
         catch (error) {
@@ -245,7 +306,8 @@ export default function TestCreate() {
                                 value={selectedGraphId ?? ""}
                                 onChange={e => handleGraphChange(e.target.value as number)}
                                 label="Choose Graph"
-                                variant="outlined">
+                                variant="outlined"
+                                disabled={test !== undefined}>
                                 {availableGraphs.map((item, index) => (
                                     <MenuItem key={index} value={item.id}>
                                         {item.id} - {item.title}
@@ -358,7 +420,7 @@ export default function TestCreate() {
                                 <CardContent className="question-card-content" sx={{ position: "relative" }}>
                                     <IconButton
                                         color="secondary"
-                                        onClick={() => deleteQuestion(qIndex)}
+                                        onClick={() => deleteQuestion(question)}
                                         sx={{ position: "absolute", top: 5, right: 5 }}
                                     >
                                         <DeleteIcon />

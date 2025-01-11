@@ -154,3 +154,56 @@ def export_test(test_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+def update_test(test_id, request_body):
+    test_schema = TestSchemaInput()
+    try:
+        test_data = test_schema.load(request_body)
+    except ValidationError as err:
+        return jsonify({"errors": err.messages}), 400
+
+    test = Test.query.get(test_id)
+    if not test:
+        return jsonify({"error": "Test not found"}), 404
+
+    test.title = test_data['title']
+
+    for question in test.questions:
+        for answer in question.answers:
+            db.session.delete(answer)
+        db.session.delete(question)
+
+    for question_data in test_data['questions']:
+        new_question = Question(
+            text=question_data['text'],
+            is_multichoice=question_data['is_multichoice'],
+            node_id=question_data['node_id'],
+            test_id=test.id
+        )
+        db.session.add(new_question)
+        db.session.flush()
+
+        for answer_data in question_data['answers']:
+            new_answer = Answer(
+                text=answer_data['text'],
+                is_correct=answer_data['is_correct'],
+                question_id=new_question.id
+            )
+            db.session.add(new_answer)
+
+    try:
+        db.session.commit()
+        return jsonify(test_schema.dump(test)), 200
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+def check_results(test_id):
+    results = Result.query.filter_by(test_id=test_id).all()
+
+    if not results:
+        return jsonify({"message": "No results for the given test"}), 200
+
+    return jsonify({"message": "Test already taken"}), 400

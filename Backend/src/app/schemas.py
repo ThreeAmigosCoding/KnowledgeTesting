@@ -19,6 +19,7 @@ class QuestionSchema(SQLAlchemyAutoSchema):
         include_relationships = True
 
     # test = fields.Nested('TestSchema', exclude=('questions',))
+    node_id = fields.Integer()
     answers = fields.Nested('AnswerSchema', many=True)
 
 
