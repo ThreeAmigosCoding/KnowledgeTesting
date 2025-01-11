@@ -145,10 +145,7 @@ def export_test(test_id):
     try:
         exports_dir = current_app.config['EXPORTS_DIR']
         file_path = os.path.join(exports_dir, f"{test_id}-QTI.xml")
-
-        if not os.path.exists(file_path):
-            export_test_to_qti(test_id)
-
+        export_test_to_qti(test_id)
         return send_file(file_path, as_attachment=True, download_name=f"{test_id}-QTI.xml",
                          mimetype="application/octet-stream")
 
