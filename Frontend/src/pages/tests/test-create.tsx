@@ -106,6 +106,7 @@ export default function TestCreate() {
         setSelectedGraphId(test.graph);
         setQuestions(test.questions as Question[]);
         setTestTitle(test.title);
+        handleGraphChange(test.graph)
     }
 
     const fetchTest = async () => {
