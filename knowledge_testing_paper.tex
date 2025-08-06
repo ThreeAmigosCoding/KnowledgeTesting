@@ -14,8 +14,13 @@
 \geometry{margin=2cm}
 
 \title{Veb platforma za testiranje znanja zasnovana na teoriji prostora znanja}
-\author{Luka Đorđević, Marko Janošević}
-\date{\today}
+
+\author{\IEEEauthorblockN{Luka Đorđević - djordjevic.r218.2024@uns.ac.rs}
+\IEEEauthorblockN{Marko Janošević - janosevic.r216.2024@uns.ac.rs}
+\IEEEauthorblockA{\textit{Softversko Inženjerstvo i Informacione Tehnologije} \\
+\textit{Univerzitet u Novom Sadu, Fakultet tehničkih nauka}\\
+Novi Sad, Srbija \\
+}}
 
 \renewcommand{\thesection}{\Roman{section}}
 
@@ -59,26 +64,21 @@ Ključni koncepti teorije prostora znanja uključuju:
 \item \textbf{Prostor znanja} - Kolekcija svih mogućih stanja znanja
 \end{itemize}
 
-Teorija prostora znanja zasniva se na pretpostavci da znanje nije linearno, već da postoje hijerarhijske zavisnosti između različitih koncepata. Na primer, učenik ne može da razume kompleksne matematičke koncepte bez poznavanja osnovnih matematičkih operacija. Ova hijerarhija se modelira kroz usmerene grafove gde čvorovi predstavljaju pojedinačne koncepte, a ivice označavaju preduslove za učenje.
+Teorija prostora znanja zasniva se na pretpostavci da znanje nije linearno, već da postoje hijerarhijske zavisnosti između različitih koncepata. Na primer, učenik ne može da razume kompleksne matematičke koncepte bez poznavanja osnovnih matematičkih operacija. Ova hijerarhija se modeluje kroz usmerene grafove gde čvorovi predstavljaju pojedinačne koncepte, a ivice označavaju preduslove za učenje.
 
 Matematički, prostor znanja se definiše kao par $(Q, \mathcal{K})$ gde je $Q$ skup svih mogućih pitanja ili koncepata, a $\mathcal{K}$ je kolekcija podskupova od $Q$ koji predstavljaju moguća stanja znanja. Svako stanje znanja $K \in \mathcal{K}$ predstavlja skup koncepata koje učenik poznaje u određenom trenutku.
 
 Adaptivno testiranje u okviru teorije prostora znanja omogućava dinamičko prilagođavanje redosleda pitanja na osnovu trenutnog stanja znanja učenika. Algoritam za adaptivno testiranje koristi informacije o očekivanom prostoru znanja da bi odredio koje pitanje je najprikladnije za postavljanje u sledećem koraku. Ovo se postiže kroz analizu zavisnosti između koncepata i trenutnog stanja znanja učenika.
 
-Generisanje stvarnog prostora znanja na osnovu studentskih rezultata predstavlja ključni aspekt teorije. Na osnovu odgovora na pitanja, sistem može da inferira koje koncepte učenik poznaje, a koje ne. Ova informacija se koristi za kreiranje personalizovanog grafa znanja koji reflektuje stvarno stanje znanja učenika. Za generisanje stvarnog prostora znanja koristi se ITA (Item Tree Analysis) algoritam \cite{vanleeuwen2006}, koji predstavlja statističku metodu za analizu hijerarhijskih zavisnosti između pitanja. ITA algoritam analizira frekvenciju tačnih odgovora na pitanja i identifikuje potencijalne zavisnosti između njih. Algoritam koristi koncepte iz teorije grafova da bi konstruisao stablo zavisnosti između pitanja, gde čvorovi predstavljaju pitanja, a ivice označavaju statističke zavisnosti. ITA algoritam je posebno koristan jer omogućava automatsko otkrivanje strukture znanja na osnovu empirijskih podataka, što omogućava validaciju očekivanog prostora znanja i identifikaciju potencijalnih grešaka u definisanju zavisnosti između koncepata.
+Generisanje stvarnog prostora znanja na osnovu studentskih rezultata predstavlja ključni aspekt teorije. Na osnovu odgovora na pitanja, sistem može da zaključi koje koncepte učenik poznaje, a koje ne. Ova informacija se koristi za kreiranje personalizovanog grafa znanja koji reflektuje stvarno stanje znanja učenika. Za generisanje stvarnog prostora znanja koristi se ITA (Item Tree Analysis) algoritam \cite{vanleeuwen2006}, koji predstavlja statističku metodu za analizu hijerarhijskih zavisnosti između pitanja. ITA algoritam analizira frekvenciju tačnih odgovora na pitanja i identifikuje potencijalne zavisnosti između njih. Algoritam koristi koncepte iz teorije grafova da bi konstruisao stablo zavisnosti između pitanja, gde čvorovi predstavljaju pitanja, a ivice označavaju statističke zavisnosti. ITA algoritam je posebno koristan jer omogućava automatsko otkrivanje strukture znanja na osnovu empirijskih podataka, što omogućava validaciju očekivanog prostora znanja i identifikaciju potencijalnih grešaka u definisanju zavisnosti između koncepata.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\columnwidth]{Klasni_dijagram.png}
-\caption{Klasni dijagram sistema}
-\end{figure}
 
 \subsection{Tehnologije}
 
 Platforma objedinjuje brojne moderne tehnologije koje pružaju skalabilnost, sigurnost i pouzdanost.
 
 \subsubsection{Backend}
-Backend aplikacija implementirana je u Python Flask radnom okviru. Flask predstavlja lagan i fleksibilan web framework koji omogućava brz razvoj REST API-ja \cite{flask2020}. Odabran je zbog svoje jednostavnosti, dobre dokumentacije i bogate ekosisteme biblioteka za rad sa bazama podataka i autentifikacijom.
+Backend aplikacija implementirana je u Python Flask radnom okviru. Flask predstavlja fleksibilan radni okvir koji omogućava brz razvoj REST API-ja \cite{flask2020}. Odabran je zbog svoje jednostavnosti, dobre dokumentacije i bogatog ekosistema biblioteka za rad sa bazama podataka i autentifikacijom.
 
 \subsubsection{Frontend}
 Frontend aplikacija implementirana je upotrebom React biblioteke u okviru programskog jezika TypeScript. React predstavlja fleksibilnu biblioteku za izgradnju korisničkog interfejsa \cite{react2020} sa komponentnim pristupom koji omogućava efikasno upravljanje stanjem aplikacije. TypeScript pruža statičku tipizaciju koja smanjuje greške u razvoju.
@@ -97,7 +97,7 @@ Jedan od ključnih radova u ovoj oblasti je ALEKS (Assessment and Learning in Kn
 
 U oblasti algoritama za analizu prostora znanja, ITA (Item Tree Analysis) algoritam predstavlja jedan od najznačajnijih doprinosa \cite{vanleeuwen2006}. Ovaj algoritam omogućava automatsko otkrivanje hijerarhijskih zavisnosti između pitanja na osnovu empirijskih podataka, što je posebno korisno za validaciju ekspertno definisanih prostora znanja. ITA algoritam je primenjen u različitim kontekstima, od psihologije do obrazovanja, i pokazao je visoku pouzdanost u identifikaciji strukture znanja.
 
-Adaptivno testiranje zasnovano na teoriji prostora znanja predstavlja aktivnu oblast istraživanja. Različiti algoritmi za adaptivno testiranje su razvijeni, uključujući algoritme zasnovane na teoriji odziva na pitanja (Item Response Theory) i teoriji prostora znanja. Komparativne studije su pokazale da pristupi zasnovani na teoriji prostora znanja mogu biti efikasniji za procenu specifičnih koncepata i identifikaciju lacuna u znanju \cite{desmarais2012}.
+Adaptivno testiranje zasnovano na teoriji prostora znanja predstavlja aktivnu oblast istraživanja. Različiti algoritmi za adaptivno testiranje su razvijeni, uključujući algoritme zasnovane na teoriji odziva na pitanja (Item Response Theory) i teoriji prostora znanja. Komparativne studije su pokazale da pristupi zasnovani na teoriji prostora znanja mogu biti efikasniji za procenu specifičnih koncepata i identifikaciju nedostataka u znanju \cite{desmarais2012}.
 
 Vizuelizacija prostora znanja predstavlja relativno novu oblast istraživanja. Različiti pristupi za vizuelizaciju grafova znanja su razvijeni, uključujući interaktivne grafove, dendrograme i mreže. Studije su pokazale da vizuelizacija može značajno poboljšati razumevanje strukture znanja kod nastavnika i studenata \cite{chen2014}.
 
@@ -117,29 +117,30 @@ Platforma je dizajnirana kao web aplikacija sa klijent-server arhitekturom, orga
 \caption{Arhitektura sistema}
 \end{figure}
 
-Frontend komponenta predstavlja korisnički interfejs platforme i izrađena je u React framework-u sa TypeScript-om. Komponenta je organizovana u modulnu strukturu gde svaki modul odgovara specifičnoj funkcionalnosti sistema. Glavni moduli uključuju autentifikaciju, kreiranje grafova, kreiranje testova, pregled rezultata i upoređivanje grafova. Frontend komponenta komunicira sa backend-om kroz REST API interfejs.
+Frontend komponenta predstavlja korisnički interfejs platforme i izrađena je u React biblioteci uz upotrebu TypeScript programskog jezika. Komponenta je organizovana u modulnu strukturu gde svaki modul odgovara specifičnoj funkcionalnosti sistema. Glavni moduli uključuju autentifikaciju, kreiranje grafova, kreiranje testova, pregled rezultata i upoređivanje grafova. Frontend komponenta komunicira sa backend-om kroz REST API interfejs.
 
 Backend komponenta predstavlja srž sistema i implementirana je u Python Flask radnom okviru. Organizovana je u tri glavna sloja: controller, service i repository. Controller sloj je zadužen za obradu HTTP zahteva, validaciju podataka i rutiranje. Service sloj sadrži biznis logiku sistema, uključujući algoritme za adaptivno testiranje i generisanje prostora znanja. Repository sloj omogućava komunikaciju sa bazom podataka kroz SQLAlchemy ORM.
 
-Baza podataka je implementirana u PostgreSQL sistemu i organizovana u devet glavnih tabela. Tabele su dizajnirane da podržavaju sve funkcionalnosti platforme, uključujući upravljanje korisnicima, kreiranje testova, čuvanje rezultata i modelovanje grafova znanja. Relacije između tabela su definisane kroz strani ključeve koji omogućavaju integritet podataka.
+Baza podataka je implementirana u PostgreSQL sistemu i organizovana u devet glavnih tabela. Tabele su dizajnirane da podržavaju sve funkcionalnosti platforme, uključujući upravljanje korisnicima, kreiranje testova, čuvanje rezultata i modelovanje grafova znanja. Relacije između tabela su definisane kroz strane ključeve koji omogućavaju integritet podataka.
 
 \subsection{Funkcionalni opis}
 
-Platforma omogućava kompletan tok rada od kreiranja grafova znanja do analize studentskih rezultata. Proces počinje kada nastavnik kreira graf znanja definisanjem čvorova (tema) i povezivanjem ih ivicama (zavisnostima). Graf se dinamički vizuelizuje u realnom vremenu, omogućavajući nastavniku da vidi strukturu znanja dok je kreira.
+Platforma omogućava kompletan tok rada od kreiranja grafova znanja do analize studentskih rezultata. Proces počinje kada nastavnik kreira graf znanja definisanjem čvorova (teme) i ivica (zavisnosti). Graf se dinamički vizualizuje u realnom vremenu, omogućavajući nastavniku da vidi strukturu znanja dok je kreira.
 
 Nakon kreiranja grafa, nastavnik može da kreira test definisanjem pitanja i povezivanjem svakog pitanja sa odgovarajućim čvorom grafa. Sistem podržava različite tipove pitanja, uključujući pitanja sa višestrukim izborom. Svako pitanje može imati više odgovora, od kojih je jedan ili više tačnih.
 
-\begin{figure}[H]
+\begin{figure*}[ht]
 \centering
-\includegraphics[width=0.8\columnwidth]{test-create.png}
-\caption{Kreiranje pitanja}
-\end{figure}
+\includegraphics[width=1\textwidth]{test-create.png}
+\caption{Kreiranje testova}
+\label{fig:graf_programiranja}
+\end{figure*}
 
-Kada student započne test, sistem koristi adaptivni algoritam za određivanje redosleda pitanja. Algoritam analizira trenutno stanje znanja studenta na osnovu prethodnih odgovora i očekivanog prostora znanja. Pitanja se postavljaju dinamički, prilagođavajući se nivou znanja studenta.
+Kada student započne test, sistem primenjuje BFS (Breadth First Search) nad grafom znanja koji je definisan za taj test kako bi formirao redosled pitanja. Graf modeluje relacije između koncepata, pa se pretragom po širini prvo posećuju čvorovi (pitanja) na minimalnoj udaljenosti od korena, odnosno osnovni koncepti, a zatim se prelazi na sve složenije nivoe.
 
-Tokom testiranja, sistem beleži sve odgovore studenta i ažurira njegovo stanje znanja u realnom vremenu. Na osnovu odgovora, sistem može da inferira koje koncepte student poznaje, a koje ne. Ova informacija se koristi za generisanje personalizovanog grafa znanja koji reflektuje stvarno stanje znanja studenta.
+Na osnovu odgovora, sistem može da zaključi koje koncepte studenti poznaju, a koje ne. Ova informacija se koristi za generisanje grafa znanja koji reflektuje stvarno stanje znanja studenata.
 
-Nakon završetka testa, nastavnik može da analizira rezultate kroz različite vizuelizacije. Sistem omogućava poređenje očekivanog i stvarnog prostora znanja, identifikaciju lacuna u znanju i generisanje personalizovanih preporuka za dalje učenje. Rezultati se mogu eksportovati u IMS QTI format za kompatibilnost sa drugim obrazovnim sistemima.
+Nakon završetka testa, nastavnik može da analizira rezultate kroz različite vizuelizacije. Sistem omogućava poređenje očekivanog i stvarnog prostora znanja i identifikaciju nedostataka u znanju. Rezultati se mogu eksportovati u IMS QTI format za kompatibilnost sa drugim obrazovnim sistemima.
 
 \begin{figure}[H]
 \centering
@@ -147,23 +148,25 @@ Nakon završetka testa, nastavnik može da analizira rezultate kroz različite v
 \caption{Upoređivanje stvarnog i očekivanog prostora znanja}
 \end{figure}
 
-Platforma takođe podržava napredne funkcionalnosti kao što su grupna analiza rezultata, identifikacija zajedničkih problema u znanju i generisanje izveštaja o performansama. Sve funkcionalnosti su dizajnirane da budu intuitivne i lako korišćive, omogućavajući nastavnicima da se fokusiraju na pedagoške aspekte umesto na tehničke detalje.
+Platforma takođe podržava napredne funkcionalnosti kao što su grupni pregled rezultata testa i generisanje grafa znanja na osnovu svih rezultata u izabranom vremenskom periodu. Sve funkcionalnosti su dizajnirane da budu intuitivne i lake za korišćenje, omogućavajući nastavnicima da se fokusiraju na pedagoške aspekte umesto na tehničke detalje.
 
 \section{DISKUSIJA}
 
-Implementacija platforme za testiranje znanja zasnovana na teoriji prostora znanja pokazala je značajne prednosti u odnosu na tradicionalne pristupe testiranju. Ključni doprinosi platforme uključuju centralizovanu platformu za kreiranje testova zasnovanih na teoriji prostora znanja, adaptivno testiranje koje prilagođava redosled pitanja, vizuelizaciju i upoređivanje očekivanog i stvarnog prostora znanja, te IMS QTI eksport za kompatibilnost sa drugim sistemima.
+Implementacija platforme za testiranje znanja zasnovana na teoriji prostora znanja pokazala je značajne prednosti u odnosu na tradicionalne pristupe testiranju. Ključni doprinosi platforme uključuju kreiranje testova zasnovanih na teoriji prostora znanja, adaptivno testiranje koje prilagođava redosled pitanja, vizualizaciju i upoređivanje očekivanog i stvarnog prostora znanja, te IMS QTI eksport za kompatibilnost sa drugim sistemima.
 
 \subsection{Prednosti platforme}
 
 Platforma pokazuje značajne prednosti u odnosu na tradicionalne sisteme za testiranje. Prva i najvažnija prednost je mogućnost vizuelnog kreiranja grafova znanja, što omogućava nastavnicima da jasno definišu hijerarhijske zavisnosti između koncepata. Ova funkcionalnost je posebno korisna za kompleksne predmete gde postoje jasne zavisnosti između tema, kao što su matematika, fizika ili programiranje.
 
-Adaptivno testiranje predstavlja drugu ključnu prednost platforme. Umesto fiksnog redosleda pitanja, sistem dinamički prilagođava test na osnovu trenutnog stanja znanja studenta. Ovo omogućava efikasniju procenu znanja i smanjuje frustraciju studenata koji se suočavaju sa pitanjima za koja nisu spremni. Adaptivni pristup takođe omogućava brže identifikaciju lacuna u znanju i fokusiranje na područja koja zahtevaju dodatnu pažnju.
+Adaptivno testiranje predstavlja drugu ključnu prednost platforme. Umesto fiksnog redosleda pitanja, sistem dinamički prilagođava test na osnovu trenutnog stanja znanja studenata. Ovo omogućava efikasniju procenu znanja i smanjuje frustraciju studenata koji se suočavaju sa pitanjima za koja nisu spremni. Adaptivni pristup takođe omogućava bržu identifikaciju nedostataka u znanju i fokusiranje na područja koja zahtevaju dodatnu pažnju.
 
-Vizuelizacija rezultata predstavlja treću značajnu prednost. Mogućnost poređenja očekivanog i stvarnog prostora znanja omogućava nastavnicima da identifikuju greške u definisanju zavisnosti između koncepata i da poboljšaju strukturu nastave. Vizuelni prikaz takođe pomaže studentima da bolje razumeju svoje znanje i identifikuju područja za poboljšanje.
+Vizualizacija rezultata predstavlja treću značajnu prednost. Mogućnost poređenja očekivanog i stvarnog prostora znanja omogućava nastavnicima da identifikuju greške u definisanju zavisnosti između koncepata i da poboljšaju strukturu nastave. Vizuelni prikaz takođe pomaže studentima da bolje razumeju svoje znanje i identifikuju područja za poboljšanje.
 
 \subsection{Ograničenja i izazovi}
 
-Uprkos prednostima, platforma ima određena ograničenja koja treba uzeti u obzir. Prvo ograničenje se odnosi na kompleksnost kreiranja grafova znanja. Za veće predmete sa mnogo tema, kreiranje detaljnog grafa može biti vremenski zahtevno i zahtevati značajnu ekspertizu nastavnika. Ovo ograničenje može se rešiti kroz razvoj naprednih alata za automatsko generisanje grafova na osnovu postojećih kurikuluma.
+Uprkos prednostima, platforma ima određena ograničenja koja treba uzeti u obzir. 
+
+Prvo ograničenje se odnosi na kompleksnost kreiranja grafova znanja. Za veće predmete sa mnogo tema, kreiranje detaljnog grafa može biti vremenski zahtevno i zahtevati značajnu ekspertizu nastavnika. Ovo ograničenje može se rešiti kroz razvoj naprednih alata za automatsko generisanje grafova na osnovu postojećih kurikuluma.
 
 Drugo ograničenje se odnosi na validaciju grafova znanja. Ekspertno definisani grafovi mogu sadržati greške u definisanju zavisnosti između koncepata, što može uticati na efikasnost adaptivnog testiranja. ITA algoritam pomaže u identifikaciji ovih grešaka, ali potrebno je dodatno istraživanje u oblasti automatske validacije grafova.
 
@@ -171,23 +174,12 @@ Treće ograničenje se odnosi na skalabilnost platforme. Za veće institucije sa
 
 \subsection{Komparacija sa postojećim rešenjima}
 
-Komparacija sa postojećim platformama za testiranje pokazuje da naša platforma pruža jedinstvene funkcionalnosti koje nisu dostupne u većini komercijalnih rešenja. Tradicionalni sistemi za testiranje često se fokusiraju na linearni pristup testiranju, gde svi studenti dobijaju ista pitanja u istom redosledu. Naša platforma omogućava personalizovano testiranje zasnovano na teoriji prostora znanja.
-
-ALEKS sistem predstavlja najbliži komercijalni ekvivalent našoj platformi, ali je ograničen na matematičke discipline i ne pruža mogućnost kreiranja custom grafova znanja. Naša platforma je dizajnirana da bude generička i primenjiva na različite discipline.
-
-\subsection{Implikacije za obrazovanje}
-
-Implementacija platforme ima značajne implikacije za obrazovni sistem. Prva implikacija se odnosi na personalizaciju nastave. Platforma omogućava identifikaciju individualnih lacuna u znanju i generisanje personalizovanih planova učenja. Ovo može značajno poboljšati efikasnost nastave i smanjiti stopu neuspešnosti studenata.
-
-Druga implikacija se odnosi na evaluaciju nastavnih programa. Mogućnost poređenja očekivanog i stvarnog prostora znanja omogućava nastavnicima da evaluiraju efikasnost svojih nastavnih programa i identifikuju potrebe za reformama.
-
-Treća implikacija se odnosi na standardizaciju testiranja. IMS QTI eksport omogućava interoperabilnost sa drugim obrazovnim sistemima i standardizaciju procesa testiranja.
+Komparacija sa postojećim platformama za testiranje pokazuje da ova platforma pruža jedinstvene funkcionalnosti koje nisu dostupne u većini komercijalnih rešenja. 
+ALEKS sistem predstavlja najbliži komercijalni ekvivalent našoj platformi, ali je ograničen na matematičke discipline i ne pruža mogućnost kreiranja grafova znanja iz različitih oblasti. Naša platforma je dizajnirana da bude generička i primenjiva na različite discipline.
 
 \section{ZAKLJUČAK}
 
-Implementacija platforme za testiranje znanja zasnovana na teoriji prostora znanja uspešno rešava probleme tradicionalnog testiranja kroz adaptivni pristup i vizuelizaciju strukture znanja. Rezultati implementacije pokazuju visoku korisnost i efikasnost sistema u odnosu na postojeća rešenja.
-
-Ključni doprinosi platforme uključuju centralizovanu platformu za kreiranje testova zasnovanih na teoriji prostora znanja, adaptivno testiranje koje prilagođava redosled pitanja, vizuelizaciju i upoređivanje očekivanog i stvarnog prostora znanja, te IMS QTI eksport za kompatibilnost sa drugim sistemima. Platforma je dizajnirana da bude generička i primenjiva na različite discipline, što je prednost u odnosu na postojeća komercijalna rešenja.
+Implementacija platforme za testiranje znanja zasnovana na teoriji prostora znanja uspešno rešava probleme tradicionalnog testiranja kroz adaptivni pristup i vizualizaciju strukture znanja. Rezultati implementacije pokazuju visoku korisnost i efikasnost sistema u odnosu na postojeća rešenja.
 
 Implementacija ITA algoritma za generisanje stvarnog prostora znanja omogućila je automatsko otkrivanje strukture znanja na osnovu empirijskih podataka, što omogućava validaciju ekspertno definisanih prostora znanja i identifikaciju potencijalnih grešaka u definisanju zavisnosti između koncepata.
 
@@ -203,15 +195,15 @@ Platforma predstavlja značajan korak napred u oblasti adaptivnog testiranja i v
 
 \begin{thebibliography}{1}
 
-\bibitem{doignon1999}
-J.~P. Doignon and J.~C. Falmagne,
-\newblock \emph{Knowledge Spaces},
-\newblock Springer-Verlag, Berlin, 1999.
-
 \bibitem{falmagne2006}
 J.~C. Falmagne and J.~P. Doignon,
 \newblock ``Knowledge spaces and learning spaces,''
 \newblock \emph{Mathematical Psychology}, vol.~50, no.~2, pp.~123--135, 2006.
+
+\bibitem{doignon1999}
+J.~P. Doignon and J.~C. Falmagne,
+\newblock \emph{Knowledge Spaces},
+\newblock Springer-Verlag, Berlin, 1999.
 
 \bibitem{vanleeuwen2006}
 M.~van der Linden and W.~J. van der Linden,
