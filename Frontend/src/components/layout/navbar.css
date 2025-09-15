@@ -1,0 +1,12 @@
+.nav-bar {
+    background-color: #1A1A1A;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.nav-bar-button {
+    color: #F5F5F5;
+    font-size: larger;
+    text-transform: capitalize;
+}
