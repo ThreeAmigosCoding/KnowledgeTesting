@@ -19,9 +19,9 @@ export default function TestsOverview() {
 
     const fetchTests = async () => {
         try {
-            const author_id = 1;
+            //const author_id = 1;
             const response = await api.get<Test[]>(`tests`, {
-                params: { author_id }
+                params: { author_id: user.id }
             });
             if (response.status === 200) {
                 setTests(response.data);
