@@ -1,4 +1,4 @@
-import {Box, Typography, Card, CardContent, Button} from "@mui/material";
+;import {Box, Typography, Card, CardContent, Button} from "@mui/material";
 import './tests.css';
 import api from "../../config/axios-config.tsx";
 import {useEffect, useState} from "react";
@@ -21,7 +21,7 @@ export default function TestsOverview() {
         try {
             //const author_id = 1;
             const response = await api.get<Test[]>(`tests`, {
-                params: { author_id: user.id }
+                params: user.role == "teacher" ? { author_id: user.id } : {}
             });
             if (response.status === 200) {
                 setTests(response.data);

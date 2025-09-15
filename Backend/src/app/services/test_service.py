@@ -17,6 +17,11 @@ def get_tests(author_id):
     test_schema = TestSchema(many=True)
     return jsonify(test_schema.dump(tests))
 
+def get_all_tests():
+    tests = Test.query.order_by(Test.id).all()
+    test_schema = TestSchema(many=True)
+    return jsonify(test_schema.dump(tests))
+
 
 # def get_test_questions(test_id):
 #     questions = Question.query.filter(Question.test_id == test_id).all()

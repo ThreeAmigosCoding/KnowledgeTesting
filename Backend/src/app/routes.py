@@ -9,7 +9,7 @@ main = Blueprint('main', __name__)
 def get_tests():
     author_id = request.args.get('author_id', type=int)
     if author_id is None:
-        return jsonify({"error": "author_id is required"}), 400
+        return test_service.get_all_tests()
     return test_service.get_tests(author_id)
 
 
