@@ -22,6 +22,11 @@ class GraphSchemaInput(Schema):
     title = fields.Str(required=True)
     nodes = fields.List(fields.Nested(NodeSchemaInput), required=True)
     edges = fields.List(fields.Nested(EdgeSchemaInput), required=True)
+    # LOM Properties
+    description = fields.Str(required=False, allow_none=True, missing=None)
+    educational_objective = fields.Str(required=False, allow_none=True, missing=None)
+    context = fields.Str(required=False, allow_none=True, missing=None, validate=lambda x: x in ['school', 'higher education', 'training', 'other'] if x else True)
+    language = fields.Str(required=False, missing='en')
 
     class Meta:
         unknown = "exclude"
@@ -40,6 +45,10 @@ class QuestionSchemaInput(Schema):
     is_multichoice = fields.Boolean(default=False)
     node_id = fields.Int(required=False, allow_none=True, missing=None)
     answers = fields.List(fields.Nested(AnswerSchemaInput), required=True)
+    # LOM Properties
+    educational_objective = fields.Str(required=False, allow_none=True, missing=None)
+    difficulty = fields.Str(required=False, allow_none=True, missing=None, validate=lambda x: x in ['very easy', 'easy', 'medium', 'difficult', 'very difficult'] if x else True)
+    typical_learning_time = fields.Str(required=False, allow_none=True, missing=None)
 
     class Meta:
         unknown = "exclude"
@@ -50,6 +59,12 @@ class TestSchemaInput(Schema):
     author_id = fields.Int(required=True)
     graph_id = fields.Int(required=True)
     questions = fields.List(fields.Nested(QuestionSchemaInput), required=True)
+    # LOM Properties
+    description = fields.Str(required=False, allow_none=True, missing=None)
+    educational_objective = fields.Str(required=False, allow_none=True, missing=None)
+    typical_learning_time = fields.Str(required=False, allow_none=True, missing=None)
+    context = fields.Str(required=False, allow_none=True, missing=None, validate=lambda x: x in ['school', 'higher education', 'training', 'other'] if x else True)
+    language = fields.Str(required=False, missing='en')
 
     class Meta:
         unknown = "exclude"

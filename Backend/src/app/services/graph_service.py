@@ -15,7 +15,14 @@ def save_graph(request_body):
     graph_schema = GraphSchemaInput()
     graph_data = graph_schema.load(request_body)
 
-    graph = Graph(title=graph_data['title'])
+    graph = Graph(
+        title=graph_data['title'],
+        # LOM Properties
+        description=graph_data.get('description'),
+        educational_objective=graph_data.get('educational_objective'),
+        context=graph_data.get('context'),
+        language=graph_data.get('language', 'en')
+    )
     db.session.add(graph)
     db.session.flush()
 

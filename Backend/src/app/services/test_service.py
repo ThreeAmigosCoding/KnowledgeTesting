@@ -45,7 +45,13 @@ def create_test(request_body):
     test = Test(
         title=test_data['title'],
         author_id=test_data['author_id'],
-        graph_id=test_data['graph_id']
+        graph_id=test_data['graph_id'],
+        # LOM Properties
+        description=test_data.get('description'),
+        educational_objective=test_data.get('educational_objective'),
+        typical_learning_time=test_data.get('typical_learning_time'),
+        context=test_data.get('context'),
+        language=test_data.get('language', 'en')
     )
     db.session.add(test)
     db.session.flush()
@@ -55,7 +61,11 @@ def create_test(request_body):
             text=question_data['text'],
             is_multichoice=question_data['is_multichoice'],
             node_id=question_data['node_id'],
-            test_id=test.id
+            test_id=test.id,
+            # LOM Properties
+            educational_objective=question_data.get('educational_objective'),
+            difficulty=question_data.get('difficulty'),
+            typical_learning_time=question_data.get('typical_learning_time')
         )
         db.session.add(question)
         db.session.flush()
@@ -170,6 +180,12 @@ def update_test(test_id, request_body):
         return jsonify({"error": "Test not found"}), 404
 
     test.title = test_data['title']
+    # Update LOM Properties
+    test.description = test_data.get('description')
+    test.educational_objective = test_data.get('educational_objective')
+    test.typical_learning_time = test_data.get('typical_learning_time')
+    test.context = test_data.get('context')
+    test.language = test_data.get('language', 'en')
 
     for question in test.questions:
         for answer in question.answers:
@@ -181,7 +197,11 @@ def update_test(test_id, request_body):
             text=question_data['text'],
             is_multichoice=question_data['is_multichoice'],
             node_id=question_data['node_id'],
-            test_id=test.id
+            test_id=test.id,
+            # LOM Properties
+            educational_objective=question_data.get('educational_objective'),
+            difficulty=question_data.get('difficulty'),
+            typical_learning_time=question_data.get('typical_learning_time')
         )
         db.session.add(new_question)
         db.session.flush()

@@ -32,7 +32,7 @@ def init_data(app, db):
             )
         ]
 
-        # Create students
+        # Create students (same as before)
         students = [
             User(
                 first_name="Jovan",
@@ -41,6 +41,7 @@ def init_data(app, db):
                 role="student",
                 password="$2a$12$nhLsLmGCtqSuCfWj4V5lteOR7LWIyB2Y3N1VfD7jMSwipMsBjqbem"
             ),
+            # ... (keep all the existing students, they're fine)
             User(
                 first_name="Ana",
                 last_name="Anić",
@@ -194,9 +195,15 @@ def init_data(app, db):
         db.session.add_all(all_users)
         db.session.commit()
 
-        # Create Knowledge Graphs
+        # Create Knowledge Graphs with LOM properties
         # Graph 1: Mathematics - Equations
-        math_graph = Graph(title="Prostor znanja - Matematika - Jednačine")
+        math_graph = Graph(
+            title="Prostor znanja - Matematika - Jednačine",
+            description="Prostor znanja za matematičke jednačine od osnovnih do naprednih koncepata",
+            educational_objective="Razumevanje i rešavanje različitih tipova matematičkih jednačina",
+            context="school",
+            language="sr"
+        )
         db.session.add(math_graph)
         db.session.flush()
 
@@ -227,7 +234,13 @@ def init_data(app, db):
         db.session.flush()
 
         # Graph 2: Physics - Mechanics
-        physics_graph = Graph(title="Prostor znanja - Fizika - Mehanika")
+        physics_graph = Graph(
+            title="Prostor znanja - Fizika - Mehanika",
+            description="Prostor znanja za mehaničke koncepte u fizici",
+            educational_objective="Razumevanje osnovnih principa mehanike i njihove primene",
+            context="school",
+            language="sr"
+        )
         db.session.add(physics_graph)
         db.session.flush()
 
@@ -260,7 +273,13 @@ def init_data(app, db):
         db.session.flush()
 
         # Graph 3: Chemistry - Organic Chemistry
-        chemistry_graph = Graph(title="Prostor znanja - Hemija - Organska hemija")
+        chemistry_graph = Graph(
+            title="Prostor znanja - Hemija - Organska hemija",
+            description="Prostor znanja za organsku hemiju i funkcionalne grupe",
+            educational_objective="Razumevanje osnovnih principa organske hemije i struktura molekula",
+            context="school",
+            language="sr"
+        )
         db.session.add(chemistry_graph)
         db.session.flush()
 
@@ -294,16 +313,24 @@ def init_data(app, db):
         db.session.add_all(chemistry_edges)
         db.session.flush()
 
-        # Create Tests
+        # Create Tests with LOM properties
         tests_data = [
             {
                 "title": "Matematika - Jednačine",
                 "author": teachers[0],
                 "graph_id": math_graph.id,
+                "description": "Test iz matematičkih jednačina različite složenosti",
+                "educational_objective": "Provera znanja o rešavanju različitih tipova jednačina",
+                "typical_learning_time": "PT30M",  # 30 minutes in ISO 8601
+                "context": "school",
+                "language": "sr",
                 "questions": [
                     {
                         "text": "Reši x + 5 = 10",
                         "node_id": math_nodes["linear"].id,
+                        "educational_objective": "Razumevanje osnovnih linearnih jednačina",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT5M",
                         "answers": [
                             {"text": "x = 5", "is_correct": True},
                             {"text": "x = 10", "is_correct": False},
@@ -314,6 +341,9 @@ def init_data(app, db):
                     {
                         "text": "Reši x^2 - 4 = 0",
                         "node_id": math_nodes["quadratic"].id,
+                        "educational_objective": "Rešavanje kvadratnih jednačina",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT5M",
                         "answers": [
                             {"text": "x = ±2", "is_correct": True},
                             {"text": "x = ±4", "is_correct": False},
@@ -324,6 +354,9 @@ def init_data(app, db):
                     {
                         "text": "Reši x^3 - 8 = 0",
                         "node_id": math_nodes["cubic"].id,
+                        "educational_objective": "Rešavanje kubnih jednačina",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT5M",
                         "answers": [
                             {"text": "x = 2", "is_correct": True},
                             {"text": "x = -2", "is_correct": False},
@@ -334,6 +367,9 @@ def init_data(app, db):
                     {
                         "text": "Reši (x+2)/(x-1) = 3",
                         "node_id": math_nodes["rational"].id,
+                        "educational_objective": "Rešavanje racionalnih jednačina",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT5M",
                         "answers": [
                             {"text": "x = 2.5", "is_correct": True},
                             {"text": "x = 1.5", "is_correct": False},
@@ -344,6 +380,9 @@ def init_data(app, db):
                     {
                         "text": "Reši 2^x = 8",
                         "node_id": math_nodes["exponential"].id,
+                        "educational_objective": "Rešavanje eksponencijalnih jednačina",
+                        "difficulty": "difficult",
+                        "typical_learning_time": "PT5M",
                         "answers": [
                             {"text": "x = 3", "is_correct": True},
                             {"text": "x = 2", "is_correct": False},
@@ -354,6 +393,9 @@ def init_data(app, db):
                     {
                         "text": "Reši log₂(x) = 4",
                         "node_id": math_nodes["logarithmic"].id,
+                        "educational_objective": "Rešavanje logaritamskih jednačina",
+                        "difficulty": "difficult",
+                        "typical_learning_time": "PT5M",
                         "answers": [
                             {"text": "x = 16", "is_correct": True},
                             {"text": "x = 8", "is_correct": False},
@@ -367,10 +409,18 @@ def init_data(app, db):
                 "title": "Fizika - Mehanika",
                 "author": teachers[1],
                 "graph_id": physics_graph.id,
+                "description": "Test iz mehaničkih koncepata u fizici",
+                "educational_objective": "Provera razumevanja osnovnih principa mehanike",
+                "typical_learning_time": "PT25M",
+                "context": "school",
+                "language": "sr",
                 "questions": [
                     {
                         "text": "Koja je formula za brzinu?",
                         "node_id": physics_nodes["kinematics"].id,
+                        "educational_objective": "Razumevanje koncepta brzine",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT3M",
                         "answers": [
                             {"text": "v = s/t", "is_correct": True},
                             {"text": "v = a*t", "is_correct": False},
@@ -381,6 +431,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za ubrzanje?",
                         "node_id": physics_nodes["kinematics"].id,
+                        "educational_objective": "Razumevanje koncepta ubrzanja",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT3M",
                         "answers": [
                             {"text": "a = Δv/Δt", "is_correct": True},
                             {"text": "a = v/t", "is_correct": False},
@@ -391,6 +444,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za put kod jednoliko ubrzanog kretanja?",
                         "node_id": physics_nodes["kinematics"].id,
+                        "educational_objective": "Primena formula za put",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT4M",
                         "answers": [
                             {"text": "s = v₀t + at²/2", "is_correct": True},
                             {"text": "s = vt", "is_correct": False},
@@ -401,6 +457,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za kinetičku energiju?",
                         "node_id": physics_nodes["energy"].id,
+                        "educational_objective": "Razumevanje kinetičke energije",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
                         "answers": [
                             {"text": "E_k = mv²/2", "is_correct": True},
                             {"text": "E_k = mgh", "is_correct": False},
@@ -411,6 +470,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za potencijalnu energiju?",
                         "node_id": physics_nodes["energy"].id,
+                        "educational_objective": "Razumevanje potencijalne energije",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
                         "answers": [
                             {"text": "E_p = mgh", "is_correct": True},
                             {"text": "E_p = mv²/2", "is_correct": False},
@@ -421,6 +483,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za impuls?",
                         "node_id": physics_nodes["momentum"].id,
+                        "educational_objective": "Razumevanje koncepta impulsa",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT4M",
                         "answers": [
                             {"text": "p = mv", "is_correct": True},
                             {"text": "p = ma", "is_correct": False},
@@ -434,10 +499,18 @@ def init_data(app, db):
                 "title": "Hemija - Organska hemija",
                 "author": teachers[2],
                 "graph_id": chemistry_graph.id,
+                "description": "Test iz organske hemije i funkcionalnih grupa",
+                "educational_objective": "Provera znanja o organskim jedinjenjima",
+                "typical_learning_time": "PT20M",
+                "context": "school",
+                "language": "sr",
                 "questions": [
                     {
                         "text": "Koja je formula za metan?",
                         "node_id": chemistry_nodes["alkanes"].id,
+                        "educational_objective": "Prepoznavanje strukture alkana",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
                         "answers": [
                             {"text": "CH₄", "is_correct": True},
                             {"text": "C₂H₄", "is_correct": False},
@@ -448,6 +521,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za etilen?",
                         "node_id": chemistry_nodes["alkenes"].id,
+                        "educational_objective": "Prepoznavanje strukture alkena",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
                         "answers": [
                             {"text": "C₂H₄", "is_correct": True},
                             {"text": "CH₄", "is_correct": False},
@@ -458,6 +534,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za etan?",
                         "node_id": chemistry_nodes["alkanes"].id,
+                        "educational_objective": "Prepoznavanje strukture alkana",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
                         "answers": [
                             {"text": "C₂H₆", "is_correct": True},
                             {"text": "CH₄", "is_correct": False},
@@ -468,6 +547,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za metanol?",
                         "node_id": chemistry_nodes["alcohols"].id,
+                        "educational_objective": "Prepoznavanje strukture alkohola",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
                         "answers": [
                             {"text": "CH₃OH", "is_correct": True},
                             {"text": "C₂H₅OH", "is_correct": False},
@@ -478,6 +560,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za formaldehid?",
                         "node_id": chemistry_nodes["aldehydes"].id,
+                        "educational_objective": "Prepoznavanje strukture aldehida",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT4M",
                         "answers": [
                             {"text": "CH₃CHO", "is_correct": True},
                             {"text": "CH₃OH", "is_correct": False},
@@ -488,6 +573,9 @@ def init_data(app, db):
                     {
                         "text": "Koja je formula za etanol?",
                         "node_id": chemistry_nodes["alcohols"].id,
+                        "educational_objective": "Prepoznavanje strukture alkohola",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
                         "answers": [
                             {"text": "C₂H₅OH", "is_correct": True},
                             {"text": "CH₃OH", "is_correct": False},
@@ -508,7 +596,12 @@ def init_data(app, db):
             test = Test(
                 title=test_data["title"],
                 author=test_data["author"],
-                graph_id=test_data["graph_id"]
+                graph_id=test_data["graph_id"],
+                description=test_data["description"],
+                educational_objective=test_data["educational_objective"],
+                typical_learning_time=test_data["typical_learning_time"],
+                context=test_data["context"],
+                language=test_data["language"]
             )
             db.session.add(test)
             db.session.flush()
@@ -519,7 +612,10 @@ def init_data(app, db):
                     text=question_data["text"],
                     is_multichoice=False,
                     test_id=test.id,
-                    node_id=question_data["node_id"]
+                    node_id=question_data["node_id"],
+                    educational_objective=question_data["educational_objective"],
+                    difficulty=question_data["difficulty"],
+                    typical_learning_time=question_data["typical_learning_time"]
                 )
                 db.session.add(question)
                 db.session.flush()
@@ -537,11 +633,9 @@ def init_data(app, db):
 
         db.session.commit()
 
-        # Create results and student answers
-        # Simulate different student performance patterns with timestamps
         yesterday = datetime.now() - timedelta(days=1)
         today = datetime.now()
-        
+
         student_results = [
             # Students who took tests YESTERDAY - difficulty-based results
             # Student 1 - Yesterday, good at easy topics, struggles with advanced

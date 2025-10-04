@@ -24,6 +24,13 @@ class Test(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     graph_id = db.Column(db.Integer, db.ForeignKey('graphs.id'), nullable=True)
 
+    # LOM Properties
+    description = db.Column(db.Text, nullable=True)
+    educational_objective = db.Column(db.Text, nullable=True)
+    typical_learning_time = db.Column(db.String(50), nullable=True)  # ISO 8601 duration format
+    context = db.Column(db.Enum('school', 'higher education', 'training', 'other', name="educational_contexts"), nullable=True)
+    language = db.Column(db.String(10), default='en')  # ISO 639-1 language code
+
     author = relationship('User', back_populates='tests_created')
     questions = relationship('Question', back_populates='test')
     graph = relationship('Graph')
@@ -37,6 +44,11 @@ class Question(db.Model):
     test_id = db.Column(db.Integer, db.ForeignKey('tests.id'), nullable=False)
     is_multichoice = db.Column(db.Boolean, default=False)
     node_id = db.Column(db.Integer, db.ForeignKey('nodes.id'), nullable=True)
+
+    # LOM Properties
+    educational_objective = db.Column(db.Text, nullable=True)
+    difficulty = db.Column(db.Enum('very easy', 'easy', 'medium', 'difficult', 'very difficult', name="difficulty_levels"), nullable=True)
+    typical_learning_time = db.Column(db.String(50), nullable=True)
 
     test = relationship('Test', back_populates='questions')
     answers = relationship('Answer', back_populates='question')
@@ -63,6 +75,8 @@ class Result(db.Model):
     is_used = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+    score = db.Column(db.Float, nullable=True)
+
     test = relationship('Test')
     student = relationship('User', back_populates='test_results')
     student_answers = relationship('StudentAnswer', back_populates='result')
@@ -84,6 +98,12 @@ class Graph(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     related_graph_id = db.Column(db.Integer, db.ForeignKey('graphs.id'), nullable=True)
+
+    # LOM Properties
+    description = db.Column(db.Text, nullable=True)
+    educational_objective = db.Column(db.Text, nullable=True)
+    context = db.Column(db.Enum('school', 'higher education', 'training', 'other', name="educational_contexts"), nullable=True)
+    language = db.Column(db.String(10), default='en')
 
     nodes = relationship('Node', back_populates='graph')
     edges = relationship('Edge', back_populates='graph')
