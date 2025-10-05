@@ -1,5 +1,6 @@
 from ..models import User, Test, Question, Answer, Graph, Node, Edge, Result, StudentAnswer
 from datetime import datetime, timedelta
+from .sparql_insert_seed import DatabaseToRDFConverter
 
 
 def init_data(app, db):
@@ -779,3 +780,13 @@ def init_data(app, db):
                     db.session.add(student_answer)
 
         db.session.commit()
+        
+        # Convert database data to RDF and insert into Virtuoso
+        print("Starting SPARQL conversion...")
+        try:
+            converter = DatabaseToRDFConverter()
+            converter.convert_and_insert(app, db)
+            print("SPARQL conversion completed successfully!")
+        except Exception as e:
+            print(f"SPARQL conversion failed: {e}")
+            # Don't fail the entire data initialization if SPARQL conversion fails
