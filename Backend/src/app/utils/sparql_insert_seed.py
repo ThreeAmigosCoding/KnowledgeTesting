@@ -136,13 +136,13 @@ class DatabaseToRDFConverter:
     def insert_triples(self, triple_block: str, kind: str, entity_id: Any) -> None:
         q = self._wrap_insert(triple_block)
         ok = self._exec_update(q)
-        if ok:
-            print(f"✓ {kind} {entity_id}: inserted")
-        else:
+        if not ok:
             preview = triple_block.strip().splitlines()[0][:140]
             print(f"✗ {kind} {entity_id}: insert failed. First triple line: {preview!r}")
 
     def ensure_graph_exists(self) -> None:
+        clear_q = self.prefixes + f"CLEAR SILENT GRAPH <{self.default_graph}>"
+        self._exec_update(clear_q)
         q = self.prefixes + f"CREATE SILENT GRAPH <{self.default_graph}>"
         # best-effort; ignore failures here (permissions are handled earlier)
         self._exec_update(q)
@@ -152,7 +152,6 @@ class DatabaseToRDFConverter:
     # -------------------------
 
     def get_all_data_from_db(self, app, db) -> Dict[str, List[Any]]:
-        print("Extracting data from SQL database...")
         with app.app_context():
             data = {
                 "teachers": User.query.filter_by(role="teacher").all(),
@@ -166,8 +165,6 @@ class DatabaseToRDFConverter:
                 "results": Result.query.all(),
                 "student_answers": StudentAnswer.query.all(),
             }
-        for k, v in data.items():
-            print(f" - {k}: {len(v)}")
         return data
 
     # -------------------------

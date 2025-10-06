@@ -641,8 +641,8 @@ def init_data(app, db):
             # Students who took tests YESTERDAY
             {"student": students[0], "timestamp": yesterday, "test_results": [
                 {"test_index": 0, "answers": [1, 6, 9, 14, 18, 22]},  # Math - mix of correct and incorrect
-                {"test_index": 1, "answers": [25, 28, 33, 38, 42, 46]},  # Physics - mix of correct and incorrect
-                {"test_index": 2, "answers": [49, 52, 57, 62, 66, 70]}   # Chemistry - mix of correct and incorrect
+                {"test_index": 1, "answers": [25, 29, 33, 38, 42, 46]},  # Physics - mix of correct and incorrect
+                {"test_index": 2, "answers": [49, 55, 57, 62, 66, 70]}   # Chemistry - mix of correct and incorrect
             ]},
             {"student": students[1], "timestamp": yesterday, "test_results": [
                 {"test_index": 0, "answers": [1, 5, 9, 13, 18, 22]},  # Math
@@ -728,8 +728,8 @@ def init_data(app, db):
             ]},
             {"student": students[17], "timestamp": today, "test_results": [
                 {"test_index": 0, "answers": [1, 6, 9, 14, 19, 22]},  # Math - mixed
-                {"test_index": 1, "answers": [25, 28, 33, 38, 43, 46]},  # Physics - mixed
-                {"test_index": 2, "answers": [49, 52, 57, 62, 67, 70]}   # Chemistry - mixed
+                {"test_index": 1, "answers": [25, 30, 33, 38, 43, 46]},  # Physics - mixed
+                {"test_index": 2, "answers": [49, 54, 57, 62, 67, 70]}   # Chemistry - mixed
             ]},
             {"student": students[18], "timestamp": today, "test_results": [
                 {"test_index": 0, "answers": [1, 5, 9, 13, 18, 22]},  # Math

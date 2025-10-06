@@ -11,6 +11,32 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data  
 
+  virtuoso:
+    image: openlink/virtuoso-opensource-7:latest
+    container_name: virtuoso-local
+    user: root
+    ports:
+      - "1111:1111"
+      - "8890:8890"
+    volumes:
+      - ./Virtuoso/virtuoso-db:/database
+      - ./Virtuoso/import:/import
+    environment:
+      - VIRT_Parameters_DirsAllowed=/database,/import
+      - DBA_PASSWORD=dba
+      - DEFAULT_GRAPH=http://example.org/kst
+    networks:
+      - virtuoso-net
+    post_start:
+      - command: sleep 10 && echo "Waiting for Virtuoso to start..."
+        user: root
+      - command: isql -H localhost -S 1111 -U dba -P dba < /import/init.sql
+        user: root
+
 volumes:
   postgres-data:
+
+networks:
+  virtuoso-net:
+    driver: bridge
 
