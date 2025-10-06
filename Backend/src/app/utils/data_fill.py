@@ -33,7 +33,7 @@ def init_data(app, db):
             )
         ]
 
-        # Create students (same as before)
+        # Create students
         students = [
             User(
                 first_name="Jovan",
@@ -42,7 +42,6 @@ def init_data(app, db):
                 role="student",
                 password="$2a$12$nhLsLmGCtqSuCfWj4V5lteOR7LWIyB2Y3N1VfD7jMSwipMsBjqbem"
             ),
-            # ... (keep all the existing students, they're fine)
             User(
                 first_name="Ana",
                 last_name="Anić",
@@ -322,7 +321,7 @@ def init_data(app, db):
                 "graph_id": math_graph.id,
                 "description": "Test iz matematičkih jednačina različite složenosti",
                 "educational_objective": "Provera znanja o rešavanju različitih tipova jednačina",
-                "typical_learning_time": "PT30M",  # 30 minutes in ISO 8601
+                "typical_learning_time": "PT30M",
                 "context": "school",
                 "language": "sr",
                 "questions": [
@@ -637,133 +636,114 @@ def init_data(app, db):
         yesterday = datetime.now() - timedelta(days=1)
         today = datetime.now()
 
+        # Updated student results structure with "answers" field containing ALL attempted answers
         student_results = [
-            # Students who took tests YESTERDAY - difficulty-based results
-            # Student 1 - Yesterday, good at easy topics, struggles with advanced
+            # Students who took tests YESTERDAY
             {"student": students[0], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9]},  # Math - easy topics (linear, quadratic, cubic) correct
-                {"test_index": 1, "correct_answers": [25, 29, 33]},  # Physics - easy topics (kinematics) correct
-                {"test_index": 2, "correct_answers": [49, 53, 57]}   # Chemistry - easy topics (alkanes, alkenes, alkanes) correct
+                {"test_index": 0, "answers": [1, 6, 9, 14, 18, 22]},  # Math - mix of correct and incorrect
+                {"test_index": 1, "answers": [25, 28, 33, 38, 42, 46]},  # Physics - mix of correct and incorrect
+                {"test_index": 2, "answers": [49, 52, 57, 62, 66, 70]}   # Chemistry - mix of correct and incorrect
             ]},
-            # Student 2 - Yesterday, good at easy and medium topics
             {"student": students[1], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13]},  # Math - easy + medium (rational) correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37]},  # Physics - easy + medium (energy) correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61]}   # Chemistry - easy + medium (alcohols) correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 18, 22]},  # Math
+                {"test_index": 1, "answers": [25, 29, 33, 37, 42, 46]},  # Physics
+                {"test_index": 2, "answers": [49, 53, 57, 61, 66, 70]}   # Chemistry
             ]},
-            # Student 3 - Yesterday, excellent at easy topics, good at medium
             {"student": students[2], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13, 17]},  # Math - easy + medium + advanced (exponential) correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37, 41]},  # Physics - easy + medium + advanced (momentum) correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61, 65]}   # Chemistry - easy + medium + advanced (aldehydes) correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 17, 22]},  # Math
+                {"test_index": 1, "answers": [25, 29, 33, 37, 41, 46]},  # Physics
+                {"test_index": 2, "answers": [49, 53, 57, 61, 65, 70]}   # Chemistry
             ]},
-            # Student 4 - Yesterday, good at easy topics, struggles with advanced
             {"student": students[3], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13]},  # Math - easy + medium correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37]},  # Physics - easy + medium correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61]}   # Chemistry - easy + medium correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 18, 21]},  # Math
+                {"test_index": 1, "answers": [25, 29, 33, 37, 42, 45]},  # Physics
+                {"test_index": 2, "answers": [49, 53, 57, 61, 66, 69]}   # Chemistry
             ]},
-            # Student 5 - Yesterday, excellent at everything
             {"student": students[4], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
+                {"test_index": 1, "answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
+                {"test_index": 2, "answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
             ]},
-            # Student 6 - Yesterday, poor at everything
             {"student": students[5], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5]},  # Math - 2/6 correct
-                {"test_index": 1, "correct_answers": [25, 29]},  # Physics - 2/6 correct
-                {"test_index": 2, "correct_answers": [49, 53]}   # Chemistry - 2/6 correct
+                {"test_index": 0, "answers": [2, 6, 10, 14, 19, 23]},  # Math - mostly incorrect
+                {"test_index": 1, "answers": [26, 30, 34, 38, 43, 47]},  # Physics - mostly incorrect
+                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
-            # Student 7 - Yesterday, good at math, poor at physics and chemistry
             {"student": students[6], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
-                {"test_index": 1, "correct_answers": [25, 29]},  # Physics - 2/6 correct
-                {"test_index": 2, "correct_answers": [49, 53]}   # Chemistry - 2/6 correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
+                {"test_index": 1, "answers": [26, 30, 34, 38, 43, 47]},  # Physics - mostly incorrect
+                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
-            # Student 8 - Yesterday, good at physics, poor at math and chemistry
             {"student": students[7], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5]},  # Math - 2/6 correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
-                {"test_index": 2, "correct_answers": [49, 53]}   # Chemistry - 2/6 correct
+                {"test_index": 0, "answers": [2, 6, 10, 14, 19, 23]},  # Math - mostly incorrect
+                {"test_index": 1, "answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
+                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
-            # Student 9 - Yesterday, good at chemistry, poor at math and physics
             {"student": students[8], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5]},  # Math - 2/6 correct
-                {"test_index": 1, "correct_answers": [25, 29]},  # Physics - 2/6 correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
+                {"test_index": 0, "answers": [2, 6, 10, 14, 19, 23]},  # Math - mostly incorrect
+                {"test_index": 1, "answers": [26, 30, 34, 38, 43, 47]},  # Physics - mostly incorrect
+                {"test_index": 2, "answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
             ]},
-            # Student 10 - Yesterday, average at everything
             {"student": students[9], "timestamp": yesterday, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13]},  # Math - 4/6 correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37]},  # Physics - 4/6 correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61]}   # Chemistry - 4/6 correct
+                {"test_index": 0, "answers": [1, 5, 10, 13, 18, 22]},  # Math - mixed
+                {"test_index": 1, "answers": [25, 29, 34, 37, 42, 46]},  # Physics - mixed
+                {"test_index": 2, "answers": [49, 53, 58, 61, 66, 70]}   # Chemistry - mixed
             ]},
             
-            # Students who took tests TODAY - mixed results
-            # Student 11 - Today, poor at everything
+            # Students who took tests TODAY
             {"student": students[10], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5]},  # Math - 2/6 correct
-                {"test_index": 1, "correct_answers": [25, 29]},  # Physics - 2/6 correct
-                {"test_index": 2, "correct_answers": [49, 53]}   # Chemistry - 2/6 correct
+                {"test_index": 0, "answers": [2, 6, 10, 14, 19, 23]},  # Math - mostly incorrect
+                {"test_index": 1, "answers": [26, 30, 34, 38, 43, 47]},  # Physics - mostly incorrect
+                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
-            # Student 12 - Today, excellent at everything
             {"student": students[11], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
+                {"test_index": 1, "answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
+                {"test_index": 2, "answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
             ]},
-            # Student 13 - Today, good at math and physics, poor at chemistry
             {"student": students[12], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
-                {"test_index": 2, "correct_answers": [49, 53]}   # Chemistry - 2/6 correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
+                {"test_index": 1, "answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
+                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
-            # Student 14 - Today, average at everything
             {"student": students[13], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13]},  # Math - 4/6 correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37]},  # Physics - 4/6 correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61]}   # Chemistry - 4/6 correct
+                {"test_index": 0, "answers": [1, 5, 10, 13, 18, 22]},  # Math - mixed
+                {"test_index": 1, "answers": [25, 29, 34, 37, 42, 46]},  # Physics - mixed
+                {"test_index": 2, "answers": [49, 53, 58, 61, 66, 70]}   # Chemistry - mixed
             ]},
-            # Student 15 - Today, good at math, poor at physics and chemistry
             {"student": students[14], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
-                {"test_index": 1, "correct_answers": [25, 29]},  # Physics - 2/6 correct
-                {"test_index": 2, "correct_answers": [49, 53]}   # Chemistry - 2/6 correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
+                {"test_index": 1, "answers": [26, 30, 34, 38, 43, 47]},  # Physics - mostly incorrect
+                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
-            # Student 16 - Today, good at physics, poor at math and chemistry
             {"student": students[15], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5]},  # Math - 2/6 correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
-                {"test_index": 2, "correct_answers": [49, 53]}   # Chemistry - 2/6 correct
+                {"test_index": 0, "answers": [2, 6, 10, 14, 19, 23]},  # Math - mostly incorrect
+                {"test_index": 1, "answers": [25, 29, 33, 37, 41, 45]},  # Physics - all correct
+                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
-            # Student 17 - Today, good at chemistry, poor at math and physics
             {"student": students[16], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5]},  # Math - 2/6 correct
-                {"test_index": 1, "correct_answers": [25, 29]},  # Physics - 2/6 correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
+                {"test_index": 0, "answers": [2, 6, 10, 14, 19, 23]},  # Math - mostly incorrect
+                {"test_index": 1, "answers": [26, 30, 34, 38, 43, 47]},  # Physics - mostly incorrect
+                {"test_index": 2, "answers": [49, 53, 57, 61, 65, 69]}   # Chemistry - all correct
             ]},
-            # Student 18 - Today, good at easy topics, struggles with advanced
             {"student": students[17], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9]},  # Math - easy topics correct
-                {"test_index": 1, "correct_answers": [25, 29, 33]},  # Physics - easy topics correct
-                {"test_index": 2, "correct_answers": [49, 53, 57]}   # Chemistry - easy topics correct
+                {"test_index": 0, "answers": [1, 6, 9, 14, 19, 22]},  # Math - mixed
+                {"test_index": 1, "answers": [25, 28, 33, 38, 43, 46]},  # Physics - mixed
+                {"test_index": 2, "answers": [49, 52, 57, 62, 67, 70]}   # Chemistry - mixed
             ]},
-            # Student 19 - Today, good at easy and medium topics
             {"student": students[18], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13]},  # Math - easy + medium correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37]},  # Physics - easy + medium correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61]}   # Chemistry - easy + medium correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 18, 22]},  # Math
+                {"test_index": 1, "answers": [25, 29, 33, 37, 42, 46]},  # Physics
+                {"test_index": 2, "answers": [49, 53, 57, 61, 66, 70]}   # Chemistry
             ]},
-            # Student 20 - Today, excellent at easy topics, good at medium
             {"student": students[19], "timestamp": today, "test_results": [
-                {"test_index": 0, "correct_answers": [1, 5, 9, 13, 17]},  # Math - easy + medium + advanced correct
-                {"test_index": 1, "correct_answers": [25, 29, 33, 37, 41]},  # Physics - easy + medium + advanced correct
-                {"test_index": 2, "correct_answers": [49, 53, 57, 61, 65]}   # Chemistry - easy + medium + advanced correct
+                {"test_index": 0, "answers": [1, 5, 9, 13, 17, 22]},  # Math
+                {"test_index": 1, "answers": [25, 29, 33, 37, 41, 46]},  # Physics
+                {"test_index": 2, "answers": [49, 53, 57, 61, 65, 70]}   # Chemistry
             ]}
         ]
 
-        # Create results and student answers
+        # Create results and student answers - storing ALL answers
         for student_data in student_results:
             for test_result in student_data["test_results"]:
                 test = all_tests[test_result["test_index"]]
@@ -775,7 +755,8 @@ def init_data(app, db):
                 db.session.add(result)
                 db.session.flush()
 
-                for answer_id in test_result["correct_answers"]:
+                # Store ALL answers for this test (both correct and incorrect)
+                for answer_id in test_result["answers"]:
                     student_answer = StudentAnswer(result_id=result.id, answer_id=answer_id)
                     db.session.add(student_answer)
 
