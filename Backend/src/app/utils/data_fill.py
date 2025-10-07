@@ -1,6 +1,7 @@
 from ..models import User, Test, Question, Answer, Graph, Node, Edge, Result, StudentAnswer
 from datetime import datetime, timedelta
 from .sparql_insert_seed import DatabaseToRDFConverter
+from  ..services.query_service import average_scores
 
 
 def init_data(app, db):
@@ -666,8 +667,8 @@ def init_data(app, db):
             ]},
             {"student": students[5], "timestamp": yesterday, "test_results": [
                 {"test_index": 0, "answers": [2, 6, 10, 14, 19, 23]},  # Math - mostly incorrect
-                {"test_index": 1, "answers": [26, 30, 34, 38, 43, 47]},  # Physics - mostly incorrect
-                {"test_index": 2, "answers": [50, 54, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
+                {"test_index": 1, "answers": [26, 30, 34, 38, 41, 45]},  # Physics - mostly incorrect
+                {"test_index": 2, "answers": [50, 53, 58, 62, 67, 71]}   # Chemistry - mostly incorrect
             ]},
             {"student": students[6], "timestamp": yesterday, "test_results": [
                 {"test_index": 0, "answers": [1, 5, 9, 13, 17, 21]},  # Math - all correct
@@ -771,3 +772,5 @@ def init_data(app, db):
         except Exception as e:
             print(f"SPARQL conversion failed: {e}")
             # Don't fail the entire data initialization if SPARQL conversion fails
+
+        average_scores(last_name="Jovanović", min_avg_score=30.4, max_avg_score=35.2)
