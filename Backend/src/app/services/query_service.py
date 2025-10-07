@@ -1,10 +1,14 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 from ..utils.queries import *
 
-sparql_endpoint = "http://localhost:8890/sparql"  # Replace with your Virtuoso SPARQL endpoint
+sparql_endpoint = "http://localhost:8890/sparql"
 sparql = SPARQLWrapper(sparql_endpoint)
 
-def average_scores(first_name=None, last_name=None, min_avg_score=None, max_avg_score=None):
+def average_scores(payload: dict):
+    first_name = payload.get("first_name")
+    last_name = payload.get("last_name")
+    min_avg_score = payload.get("min_avg_score")
+    max_avg_score = payload.get("max_avg_score")
 
     filters = []
     if first_name:
@@ -15,33 +19,29 @@ def average_scores(first_name=None, last_name=None, min_avg_score=None, max_avg_
         filters.append(f'FILTER(?avgScorePercent >= {min_avg_score})')
     if max_avg_score is not None:
         filters.append(f'FILTER(?avgScorePercent <= {max_avg_score})')
+
     filter_clause = " ".join(filters) if filters else ""
     final_query = average_scores_query.format(filters=filter_clause)
-    print(final_query)
 
     sparql.setQuery(final_query)
     sparql.setReturnFormat(JSON)
+
     try:
-        # Execute the query
         results = sparql.query().convert()
 
-        # Process and print the results
+        output = []
         for result in results["results"]["bindings"]:
-            student = result.get("student", {}).get("value", "N/A")
-            first_name = result.get("firstName", {}).get("value", "N/A")
-            last_name = result.get("lastName", {}).get("value", "N/A")
-            tests_taken = result.get("testsTaken", {}).get("value", "N/A")
-            avg_score = result.get("avgScorePercent", {}).get("value", "N/A")
-            best_score = result.get("bestScorePercent", {}).get("value", "N/A")
+            item = {
+                "student": result.get("student", {}).get("value", None),
+                "first_name": result.get("firstName", {}).get("value", None),
+                "last_name": result.get("lastName", {}).get("value", None),
+                "tests_taken": result.get("testsTaken", {}).get("value", None),
+                "avg_score_percent": result.get("avgScorePercent", {}).get("value", None),
+                "best_score_percent": result.get("bestScorePercent", {}).get("value", None),
+            }
+            output.append(item)
 
-            print(f"Student: {student}")
-            print(f"First Name: {first_name}")
-            print(f"Last Name: {last_name}")
-            print(f"Tests Taken: {tests_taken}")
-            print(f"Average Score (%): {avg_score}")
-            print(f"Best Score (%): {best_score}")
-            print("-" * 50)
+        return output
 
     except Exception as e:
-        print(f"An error occurred: {e}")
-    pass
+        return {"error": f"An error occurred: {str(e)}"}

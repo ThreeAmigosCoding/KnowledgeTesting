@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import "./queries.css";
-import { Divider, Typography, Paper } from "@mui/material";
+import { Divider, Typography, Box } from "@mui/material";
 import QueryCard, { QueryDefinition, QueryParameterValueMap } from "./query-card";
 import {QueriesService} from "../../services/queries-service.ts";
+import AverageScoresTable from "../../components/queries/average-scores-table.tsx";
 
 
 const service = new QueriesService();
@@ -11,12 +12,13 @@ const QueriesOverview: React.FC = () => {
     const queries: QueryDefinition[] = useMemo(
         () => [
             {
-                id: "get-all-students",
-                name: "Get all students",
+                id: "average-scores",
+                name: "Average Scores",
                 parameters: [
-                    { name: "name", optional: true, valueType: "string", label: "Name" },
-                    { name: "surname", optional: true, valueType: "string", label: "Surname" },
-                    { name: "age", optional: false, valueType: "number", label: "Age" },
+                    { name: "first_name", optional: true, valueType: "string", label: "Name" },
+                    { name: "last_name", optional: true, valueType: "string", label: "Surname" },
+                    { name: "min_avg_score", optional: true, valueType: "number", label: "Min Average Score" },
+                    { name: "max_avg_score", optional: true, valueType: "number", label: "Max Average Score" },
                 ],
             },
         ],
@@ -61,18 +63,30 @@ const QueriesOverview: React.FC = () => {
             </div>
 
             <div className="query-result-container">
-                <Typography variant="h2">
-                    Result
-                </Typography>
+                <Typography variant="h2">Result</Typography>
                 <Divider />
-                <Paper variant="outlined" sx={{ p: 2, minHeight: 200 }}>
+
+                <Box>
                     <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}>
-                        {activeQueryId ? `Query: ${activeQueryId}` : "No query executed yet."}
+                        {activeQueryId
+                            ? `Query: ${queries.find((q) => q.id === activeQueryId)?.name ?? activeQueryId}`
+                            : "No query executed yet."}
                     </Typography>
-                    <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-          {activeResult ? JSON.stringify(activeResult, null, 2) : "—"}
-        </pre>
-                </Paper>
+
+                    {!activeResult ? (
+                        <Typography variant="body2" sx={{ color: "text.secondary" }}>—</Typography>
+                    ) : activeResult?.error ? (
+                        <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word", color: "crimson" }}>
+                            {JSON.stringify(activeResult, null, 2)}
+                          </pre>
+                    ) : activeQueryId === "average-scores" ? (
+                        <AverageScoresTable rows={Array.isArray(activeResult) ? activeResult : []} />
+                    ) : (
+                        <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                            {JSON.stringify(activeResult, null, 2)}
+                          </pre>
+                    )}
+                </Box>
             </div>
         </div>
     );

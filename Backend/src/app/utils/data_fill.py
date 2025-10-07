@@ -1,7 +1,6 @@
 from ..models import User, Test, Question, Answer, Graph, Node, Edge, Result, StudentAnswer
 from datetime import datetime, timedelta
 from .sparql_insert_seed import DatabaseToRDFConverter
-from  ..services.query_service import average_scores
 
 
 def init_data(app, db):
@@ -772,5 +771,3 @@ def init_data(app, db):
         except Exception as e:
             print(f"SPARQL conversion failed: {e}")
             # Don't fail the entire data initialization if SPARQL conversion fails
-
-        average_scores(last_name="Jovanović", min_avg_score=30.4, max_avg_score=35.2)

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .services import test_service, graph_service, user_service, result_service
+from .services import test_service, graph_service, user_service, result_service, query_service
 from .utils.auth import authorize
 
 main = Blueprint('main', __name__)
@@ -91,7 +91,6 @@ def get_results():
         return result_service.get_results_by_student_id(student_id)
     return result_service.get_results_by_test_id(test_id)
 
-
 @main.route('get-result', methods=['GET'])
 def get_result():
     result_id = request.args.get('resultId', type=int)
@@ -112,3 +111,7 @@ def check_results():
     if test_id is None:
         return jsonify({"error": "test_id is required"}), 400
     return test_service.check_results(test_id)
+
+@main.route('/queries/average-scores', methods=['POST'])
+def average_scores():
+    return query_service.average_scores(request.json)

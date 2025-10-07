@@ -1,29 +1,36 @@
-export class QueriesService {
+import api from "../config/axios-config.tsx";
 
-    async execute(id: string, params: Record<string, any>) {
+export type QueryParams = Record<string, string | number | boolean | undefined>;
+
+export class QueriesService {
+    async execute(id: string, params: QueryParams) {
         switch (id) {
-            case "get-all-students":
-                return this.getAllStudents(params);
+            case "average-scores":
+                return this.averageScores(params);
             default:
                 throw new Error(`No service method registered for id "${id}".`);
         }
     }
 
-    private async getAllStudents(params: Record<string, any>) {
-        const qs = new URLSearchParams();
-        Object.entries(params).forEach(([k, v]) => {
-            if (v === undefined || v === "") return;
-            qs.append(k, String(v));
-        });
+    private async averageScores(params: QueryParams) {
+        try {
+            const cleanParams: Record<string, any> = {};
+            for (const [key, value] of Object.entries(params)) {
+                if (value !== undefined && value !== "") {
+                    cleanParams[key] = value;
+                }
+            }
 
-        const url = `/api/students${qs.toString() ? `?${qs.toString()}` : ""}`;
-        const res = await fetch(url, { method: "GET" });
+            const response = await api.post("queries/average-scores", cleanParams);
 
-        if (!res.ok) {
-            const text = await res.text().catch(() => "");
-            throw new Error(`API ${res.status} ${res.statusText}${text ? `: ${text}` : ""}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Unexpected status ${response.status}`);
+            }
+        } catch (error: any) {
+            console.error("Error fetching average scores:", error);
+            throw error;
         }
-
-        return res.json();
     }
 }
