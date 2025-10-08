@@ -123,3 +123,11 @@ def problematic_topics():
 @main.route('/queries/prerequisite-mastery', methods=['POST'])
 def prerequisite_mastery():
     return query_service.prerequisite_mastery(request.json)
+
+@main.route('/queries/test-count-by-context/<mail>', methods=['GET'])
+def test_count_by_context(mail):
+    return query_service.get_teacher_tests_by_context(mail)
+
+@main.route('/queries/top-10-from-teacher/<mail>', methods=['GET'])
+def test_count_by_student(mail):
+    return query_service.get_top_10_from_teacher(mail)

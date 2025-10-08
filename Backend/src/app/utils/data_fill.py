@@ -502,7 +502,7 @@ def init_data(app, db):
                 "description": "Test iz organske hemije i funkcionalnih grupa",
                 "educational_objective": "Provera znanja o organskim jedinjenjima",
                 "typical_learning_time": "PT20M",
-                "context": "school",
+                "context": "training",
                 "language": "sr",
                 "questions": [
                     {
