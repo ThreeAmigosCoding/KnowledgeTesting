@@ -71,7 +71,6 @@ def problematic_topics(payload: dict):
     
     try:
         results = sparql.query().convert()
-
         output = []
         for result in results["results"]["bindings"]:
             item = {
@@ -83,6 +82,48 @@ def problematic_topics(payload: dict):
                 "error_count": result.get("errorCount", {}).get("value", None),
                 "total_questions": result.get("totalQuestions", {}).get("value", None),
                 "error_percentage": result.get("errorPercentage", {}).get("value", None),
+            }
+            output.append(item)
+
+        return output
+
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
+
+
+def get_teacher_tests_by_context(teacher_email):
+    final_query = test_from_teacher_by_context_query.format(teacherEmail=teacher_email)
+    sparql.setQuery(final_query)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        results = sparql.query().convert()
+        output = []
+        for result in results["results"]["bindings"]:
+            item = {
+                "context": result.get("context", {}).get("value", None),
+                "testsCount": result.get("testsCount", {}).get("value", None),
+            }
+            output.append(item)
+        return output
+
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
+
+def get_top_10_from_teacher(teacher_email):
+    final_query = top_10_from_teacher_query.format(teacherEmail=teacher_email)
+    sparql.setQuery(final_query)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        results = sparql.query().convert()
+        output = []
+        for result in results["results"]["bindings"]:
+            item = {
+                "student": result.get("student", {}).get("value", None),
+                "first_name": result.get("firstName", {}).get("value", None),
+                "last_name": result.get("lastName", {}).get("value", None),
+                "avg_score_percent": result.get("avgScorePercent", {}).get("value", None),
             }
             output.append(item)
 
@@ -135,5 +176,4 @@ def prerequisite_mastery(payload: dict):
 
     except Exception as e:
         return {"error": f"An error occurred: {str(e)}"}
-    
     

@@ -222,5 +222,103 @@ prerequisite_mastery_query = """
     }}
     GROUP BY ?firstName ?lastName ?targetNodeName
     HAVING (AVG(?targetCorrectness) < 0.6 && AVG(?prereqCorrectness) < 0.6)
-    ORDER BY ?lastName ?firstName ?avgPrereqPerformance
+    ORDER BY ?lastName ?firstName ?avgPrereqPerformance 
+"""
+
+test_from_teacher_by_context_query = """
+    PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX kst:  <http://example.org/kst#>
+    PREFIX lom:  <http://ltsc.ieee.org/rdf/lom/>
+    
+    SELECT ?context (COUNT(DISTINCT ?test) AS ?testsCount)
+    WHERE {{
+      {{
+        SELECT DISTINCT ?context WHERE {{
+          ?anyTest a kst:Test ;
+                   lom:context ?context .
+        }}
+      }}
+    
+      ?teacher a kst:Teacher ;
+               foaf:mbox <mailto:{teacherEmail}> .
+    
+      OPTIONAL {{
+        ?test a kst:Test ;
+              kst:hasAuthor ?teacher ;
+              lom:context   ?context .
+      }}
+    }}
+    GROUP BY ?context
+    ORDER BY ?context
+"""
+
+top_10_from_teacher_query = """
+    PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX kst:  <http://example.org/kst#>
+    
+    SELECT
+      ?student
+      ?firstName
+      ?lastName
+      (ROUND(AVG(?scorePercent) * 100) / 100 AS ?avgScorePercent)
+    WHERE {{ 
+      {{ 
+        SELECT
+          ?student
+          ?firstName
+          ?lastName
+          ?result
+          (IF(COALESCE(?totalQuestions,0) > 0,
+              ROUND((xsd:decimal(COALESCE(?correctQuestions,0)) / xsd:decimal(?totalQuestions)) * 10000) / 100,
+              0) AS ?scorePercent)
+        WHERE {{ 
+          # Find the teacher by email
+          ?teacher a kst:Teacher ;
+                   foaf:mbox <mailto:{teacherEmail}> .
+    
+          # Find tests authored by the teacher
+          ?test a kst:Test ;
+                kst:hasAuthor ?teacher .
+    
+          # Find results for those tests
+          ?result a kst:TestResult ;
+                  kst:forTest ?test ;
+                  kst:belongsToStudent ?student .
+    
+          # Get student details
+          ?student a kst:Student .
+          OPTIONAL {{ ?student foaf:firstName ?firstName . }}
+          OPTIONAL {{ ?student foaf:lastName  ?lastName  . }}
+    
+          # Count correct answers per result
+          OPTIONAL {{ 
+            SELECT ?result (COUNT(DISTINCT ?qCorr) AS ?correctQuestions)
+            WHERE {{ 
+              ?sa a kst:StudentAnswer ;
+                  kst:belongsToResult ?result ;
+                  kst:answersQuestion ?qCorr ;
+                  kst:selectedAnswer ?ans .
+              ?ans kst:isCorrect true .
+            }}
+            GROUP BY ?result
+          }}
+    
+          # Count total questions per test
+          OPTIONAL {{ 
+            SELECT ?test (COUNT(DISTINCT ?qAll) AS ?totalQuestions)
+            WHERE {{ 
+              ?qAll a kst:Question ;
+                    kst:belongsToTest ?test .
+            }}
+            GROUP BY ?test
+          }}
+        }}
+      }}
+    }}
+    GROUP BY ?student ?firstName ?lastName
+    HAVING (COUNT(?result) > 0)  # Ensure students have at least one result
+    ORDER BY DESC(?avgScorePercent)
+    LIMIT 10
 """
