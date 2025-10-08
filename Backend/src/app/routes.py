@@ -115,3 +115,7 @@ def check_results():
 @main.route('/queries/average-scores', methods=['POST'])
 def average_scores():
     return query_service.average_scores(request.json)
+
+@main.route('/queries/problematic-topics', methods=['POST'])
+def problematic_topics():
+    return query_service.problematic_topics(request.json)
