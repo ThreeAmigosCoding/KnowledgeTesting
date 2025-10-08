@@ -4,6 +4,7 @@ import { Divider, Typography, Box } from "@mui/material";
 import QueryCard, { QueryDefinition, QueryParameterValueMap } from "./query-card";
 import {QueriesService} from "../../services/queries-service.ts";
 import AverageScoresTable from "../../components/queries/average-scores-table.tsx";
+import ProblematicTopicsTable from "../../components/queries/problematic-topics-table.tsx";
 
 
 const service = new QueriesService();
@@ -21,6 +22,16 @@ const QueriesOverview: React.FC = () => {
                     { name: "max_avg_score", optional: true, valueType: "number", label: "Max Average Score" },
                 ],
             },
+            {
+                id: "problematic-topics",
+                name: "Problematic topics",
+                parameters: [
+                    { name: "first_name", optional: true, valueType: "string", label: "Name" },
+                    { name: "last_name", optional: true, valueType: "string", label: "Surname" },
+                    { name: "graph_title", optional: true, valueType: "string", label: "Title" },
+                    { name: "error_percentage", optional: true, valueType: "number", label: "Error percentge" },
+                ],
+            }
         ],
         []
     );
@@ -81,7 +92,9 @@ const QueriesOverview: React.FC = () => {
                           </pre>
                     ) : activeQueryId === "average-scores" ? (
                         <AverageScoresTable rows={Array.isArray(activeResult) ? activeResult : []} />
-                    ) : (
+                    ) : activeQueryId === "problematic-topics" ? (
+                            <ProblematicTopicsTable rows={Array.isArray(activeResult) ? activeResult : []} />
+                    ): (
                         <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                             {JSON.stringify(activeResult, null, 2)}
                           </pre>
