@@ -165,3 +165,62 @@ problematic_topics_query = """
     }}
     ORDER BY ?firstName ?lastName ?graphTitle DESC(?errorPercentage)
 """
+
+prerequisite_mastery_query = """
+    PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX kst:  <http://example.org/kst#>
+    PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+    SELECT ?firstName
+          ?lastName
+          (STR(?targetNodeName) as ?topic)
+          (GROUP_CONCAT(DISTINCT ?prereqNodeName; separator=", ") as ?weakPrerequisites)
+          (ROUND(AVG(?targetCorrectness) * 100) as ?avgTopicPerformance)
+          (ROUND(AVG(?prereqCorrectness) * 100) as ?avgPrereqPerformance)
+          (COUNT(DISTINCT ?prereqNode) as ?prerequisitesCount)
+    WHERE {{
+      ?targetNode a kst:Node ;
+                  dc:title ?targetNodeName ;
+                  kst:belongsToGraph ?graph .
+      
+      ?edge a kst:Edge ;
+            kst:hasSourceNode ?prereqNode ;
+            kst:hasTargetNode ?targetNode .
+      
+      ?prereqNode dc:title ?prereqNodeName .
+      
+      ?targetQuestion a kst:Question ;
+                      kst:mapsToNode ?targetNode ;
+                      kst:belongsToTest ?test .
+      
+      ?prereqQuestion a kst:Question ;
+                      kst:mapsToNode ?prereqNode ;
+                      kst:belongsToTest ?test .
+      
+      ?targetStudentAnswer a kst:StudentAnswer ;
+                          kst:answersQuestion ?targetQuestion ;
+                          kst:selectedAnswer ?targetAnswer ;
+                          kst:belongsToResult ?result .
+      
+      ?targetAnswer kst:isCorrect ?targetCorrect .
+      BIND(IF(?targetCorrect, 1.0, 0.0) AS ?targetCorrectness)
+      
+      ?prereqStudentAnswer a kst:StudentAnswer ;
+                          kst:answersQuestion ?prereqQuestion ;
+                          kst:selectedAnswer ?prereqAnswer ;
+                          kst:belongsToResult ?result .
+      
+      ?prereqAnswer kst:isCorrect ?prereqCorrect .
+      BIND(IF(?prereqCorrect, 1.0, 0.0) AS ?prereqCorrectness)
+      
+      ?result kst:belongsToStudent ?student .
+      ?student foaf:firstName ?firstName ;
+              foaf:lastName ?lastName .
+              
+      {filters}
+    }}
+    GROUP BY ?firstName ?lastName ?targetNodeName
+    HAVING (AVG(?targetCorrectness) < 0.6 && AVG(?prereqCorrectness) < 0.6)
+    ORDER BY ?lastName ?firstName ?avgPrereqPerformance
+"""

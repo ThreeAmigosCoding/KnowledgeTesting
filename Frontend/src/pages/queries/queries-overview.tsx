@@ -5,6 +5,7 @@ import QueryCard, { QueryDefinition, QueryParameterValueMap } from "./query-card
 import {QueriesService} from "../../services/queries-service.ts";
 import AverageScoresTable from "../../components/queries/average-scores-table.tsx";
 import ProblematicTopicsTable from "../../components/queries/problematic-topics-table.tsx";
+import PrerequisiteMasteryTable from "../../components/queries/prerequisite-mastery-table.tsx";
 
 
 const service = new QueriesService();
@@ -30,6 +31,16 @@ const QueriesOverview: React.FC = () => {
                     { name: "last_name", optional: true, valueType: "string", label: "Surname" },
                     { name: "graph_title", optional: true, valueType: "string", label: "Title" },
                     { name: "error_percentage", optional: true, valueType: "number", label: "Error percentge" },
+                ],
+            },
+            {
+                id: "prerequisite-mastery",
+                name: "Prerequisite mastery",
+                parameters: [
+                    { name: "first_name", optional: true, valueType: "string", label: "Name" },
+                    { name: "last_name", optional: true, valueType: "string", label: "Surname" },
+                    { name: "topic", optional: true, valueType: "string", label: "Topic" },
+                    { name: "weak_prerequisites", optional: true, valueType: "string", label: "Weak prerequisites" },
                 ],
             }
         ],
@@ -94,7 +105,9 @@ const QueriesOverview: React.FC = () => {
                         <AverageScoresTable rows={Array.isArray(activeResult) ? activeResult : []} />
                     ) : activeQueryId === "problematic-topics" ? (
                             <ProblematicTopicsTable rows={Array.isArray(activeResult) ? activeResult : []} />
-                    ): (
+                    ) : activeQueryId === "prerequisite-mastery" ? (
+                            <PrerequisiteMasteryTable rows={Array.isArray(activeResult) ? activeResult : []} />
+                    ) : (
                         <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                             {JSON.stringify(activeResult, null, 2)}
                           </pre>
