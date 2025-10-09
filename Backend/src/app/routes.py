@@ -119,3 +119,7 @@ def average_scores():
 @main.route('/queries/problematic-topics', methods=['POST'])
 def problematic_topics():
     return query_service.problematic_topics(request.json)
+
+@main.route('/queries/prerequisite-mastery', methods=['POST'])
+def prerequisite_mastery():
+    return query_service.prerequisite_mastery(request.json)

@@ -92,5 +92,48 @@ def problematic_topics(payload: dict):
         return {"error": f"An error occurred: {str(e)}"}
     
     
+def prerequisite_mastery(payload: dict):
+    first_name = payload.get("first_name")
+    last_name = payload.get("last_name")
+    topic = payload.get("topic")
+    weak_prerequisites = payload.get("weak_prerequisites")
+    
+    filters = []
+    
+    if first_name:
+        filters.append(f'FILTER(LCASE(?firstName) = LCASE("{first_name}"))')
+    if last_name:
+        filters.append(f'FILTER(LCASE(?lastName) = LCASE("{last_name}"))')
+    if topic:
+        filters.append(f'FILTER(LCASE(STR(?targetNodeName)) = LCASE("{topic}"))')
+    if weak_prerequisites:
+        filters.append(f'FILTER(LCASE(?weakPrerequisites) = LCASE("{weak_prerequisites}"))')
+        
+    filter_clause = " ".join(filters) if filters else ""
+    final_query = prerequisite_mastery_query.format(filters=filter_clause)
+
+    sparql.setQuery(final_query)
+    sparql.setReturnFormat(JSON)
+    
+    try:
+        results = sparql.query().convert()
+
+        output = []
+        for result in results["results"]["bindings"]:
+            item = {
+                "first_name": result.get("firstName", {}).get("value", None),
+                "last_name": result.get("lastName", {}).get("value", None),
+                "topic": result.get("topic", {}).get("value", None),
+                "weak_prerequisites": result.get("weakPrerequisites", {}).get("value", None),
+                "avg_topic_performance": result.get("avgTopicPerformance", {}).get("value", None),
+                "avg_prereq_performance": result.get("avgPrereqPerformance", {}).get("value", None),
+                "prerequisites_count": result.get("prerequisitesCount", {}).get("value", None),
+            }
+            output.append(item)
+
+        return output
+
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
     
     
