@@ -81,4 +81,45 @@ export class QueriesService {
             throw error;
         }
     }
+
+    public async testsByContext(teacherMail: string) {
+        const response = await api.get(`queries/test-count-by-context/${teacherMail}`);
+
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            throw new Error(`Unexpected status ${response.status}`);
+        }
+    }
+
+    public async testsByLanguage(teacherMail: string) {
+        const response = await api.get(`queries/test-count-by-language/${teacherMail}`);
+
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            throw new Error(`Unexpected status ${response.status}`);
+        }
+    }
+
+    public async top10FromTeacher(teacherMail: string) {
+        const response = await api.get(`queries/top-10-from-teacher/${teacherMail}`);
+
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            throw new Error(`Unexpected status ${response.status}`);
+        }
+    }
+
+    public async topWorstFields(teacherMail: string) {
+        const response = await api.get(`queries/top-worst-fields/${teacherMail}`);
+
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            throw new Error(`Unexpected status ${response.status}`);
+        }
+    }
+    
 }

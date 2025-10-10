@@ -497,7 +497,7 @@ def init_data(app, db):
             },
             {
                 "title": "Hemija - Organska hemija",
-                "author": teachers[2],
+                "author": teachers[0],
                 "graph_id": chemistry_graph.id,
                 "description": "Test iz organske hemije i funkcionalnih grupa",
                 "educational_objective": "Provera znanja o organskim jedinjenjima",
@@ -586,6 +586,415 @@ def init_data(app, db):
                 ]
             }
         ]
+        additional_tests = [
+            {
+                "title": "Algebra Extensions — Linear & Quadratic Mix",
+                "author": teachers[0],
+                "graph_id": math_graph.id,
+                "description": "Mixed practice on linear and quadratic equations.",
+                "educational_objective": "Strengthen solving skills for linear/quadratic forms.",
+                "typical_learning_time": "PT25M",
+                "context": "school",
+                "language": "en",
+                "questions": [
+                    {
+                        "text": "Solve 3x − 9 = 0",
+                        "node_id": math_nodes["linear"].id,
+                        "educational_objective": "Apply basic linear equation isolation.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "x = 3", "is_correct": True},
+                            {"text": "x = −3", "is_correct": False},
+                            {"text": "x = 9", "is_correct": False},
+                            {"text": "x = 0", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Solve x² − 9x = 0",
+                        "node_id": math_nodes["quadratic"].id,
+                        "educational_objective": "Factor simple quadratic expressions.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT4M",
+                        "answers": [
+                            {"text": "x = 0 or x = 9", "is_correct": True},
+                            {"text": "x = 3 or x = 6", "is_correct": False},
+                            {"text": "x = 9 only", "is_correct": False},
+                            {"text": "No real solution", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Solve 2x + 7 = 1",
+                        "node_id": math_nodes["linear"].id,
+                        "educational_objective": "Manipulate linear expressions.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "x = −3", "is_correct": True},
+                            {"text": "x = 3", "is_correct": False},
+                            {"text": "x = −4", "is_correct": False},
+                            {"text": "x = 0", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Exponentials & Logarithms — Basics",
+                "author": teachers[0],
+                "graph_id": math_graph.id,
+                "description": "Fundamentals of exponential and logarithmic equations.",
+                "educational_objective": "Relate exponential and logarithmic forms.",
+                "typical_learning_time": "PT20M",
+                "context": "training",
+                "language": "de",
+                "questions": [
+                    {
+                        "text": "Löse 5^x = 25",
+                        "node_id": math_nodes["exponential"].id,
+                        "educational_objective": "Exponentials as repeated multiplication.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "x = 2", "is_correct": True},
+                            {"text": "x = 5", "is_correct": False},
+                            {"text": "x = 1", "is_correct": False},
+                            {"text": "x = −2", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Bestimme x: log₁₀(x) = 3",
+                        "node_id": math_nodes["logarithmic"].id,
+                        "educational_objective": "Inverse relationship of log and exp.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT4M",
+                        "answers": [
+                            {"text": "x = 1000", "is_correct": True},
+                            {"text": "x = 300", "is_correct": False},
+                            {"text": "x = 10", "is_correct": False},
+                            {"text": "x = 1/1000", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Cubic Equations — Roots & Structure",
+                "author": teachers[0],
+                "graph_id": math_graph.id,
+                "description": "Intro to simple cubic equations with integer roots.",
+                "educational_objective": "Recognize perfect cube patterns.",
+                "typical_learning_time": "PT20M",
+                "context": "higher education",
+                "language": "it",
+                "questions": [
+                    {
+                        "text": "Risolvi x³ − 27 = 0",
+                        "node_id": math_nodes["cubic"].id,
+                        "educational_objective": "Find cube roots.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT4M",
+                        "answers": [
+                            {"text": "x = 3", "is_correct": True},
+                            {"text": "x = −3", "is_correct": False},
+                            {"text": "x = 9", "is_correct": False},
+                            {"text": "Nessuna soluzione reale", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Risolvi x³ = 0",
+                        "node_id": math_nodes["cubic"].id,
+                        "educational_objective": "Zero-product principle.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
+                        "answers": [
+                            {"text": "x = 0", "is_correct": True},
+                            {"text": "x = 1", "is_correct": False},
+                            {"text": "x = 3", "is_correct": False},
+                            {"text": "x = −1", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Rational Equations — Domain & Solutions",
+                "author": teachers[0],
+                "graph_id": math_graph.id,
+                "description": "Practice solving rational equations and checking domains.",
+                "educational_objective": "Avoid extraneous solutions in rational forms.",
+                "typical_learning_time": "PT30M",
+                "context": "other",
+                "language": "sr",
+                "questions": [
+                    {
+                        "text": "Reši (2x − 1)/(x − 3) = 1",
+                        "node_id": math_nodes["rational"].id,
+                        "educational_objective": "Cross-multiplication & restrictions.",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT6M",
+                        "answers": [
+                            {"text": "x = 4", "is_correct": True},
+                            {"text": "x = 3", "is_correct": False},
+                            {"text": "x = 2", "is_correct": False},
+                            {"text": "x = 0", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Odredi domen izraza 1/(x − 5)",
+                        "node_id": math_nodes["rational"].id,
+                        "educational_objective": "Domain restrictions.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT4M",
+                        "answers": [
+                            {"text": "x ∈ ℝ \\ {5}", "is_correct": True},
+                            {"text": "x ∈ ℝ", "is_correct": False},
+                            {"text": "x > 5", "is_correct": False},
+                            {"text": "x < 5", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Kinematics Refresher — Speed & Acceleration",
+                "author": teachers[0],
+                "graph_id": physics_graph.id,
+                "description": "Core relations in 1D kinematics.",
+                "educational_objective": "Connect displacement, velocity, and acceleration.",
+                "typical_learning_time": "PT20M",
+                "context": "school",
+                "language": "en",
+                "questions": [
+                    {
+                        "text": "Which equation gives average speed?",
+                        "node_id": physics_nodes["kinematics"].id,
+                        "educational_objective": "Average vs instantaneous concepts.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "v = s / t", "is_correct": True},
+                            {"text": "v = a · t", "is_correct": False},
+                            {"text": "v = F / m", "is_correct": False},
+                            {"text": "v = m · a", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "For constant acceleration a, which holds?",
+                        "node_id": physics_nodes["kinematics"].id,
+                        "educational_objective": "Use SUVAT relations.",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT5M",
+                        "answers": [
+                            {"text": "v² = v₀² + 2as", "is_correct": True},
+                            {"text": "v = s/t + at²", "is_correct": False},
+                            {"text": "s = v²/2a + t", "is_correct": False},
+                            {"text": "a = s/v", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Dynamics & Forces — Newton Basics",
+                "author": teachers[0],
+                "graph_id": physics_graph.id,
+                "description": "Quick check on Newton’s laws and force relations.",
+                "educational_objective": "Relate net force with acceleration.",
+                "typical_learning_time": "PT20M",
+                "context": "training",
+                "language": "de",
+                "questions": [
+                    {
+                        "text": "Welcher Ausdruck beschreibt das zweite Newtonsche Gesetz korrekt?",
+                        "node_id": physics_nodes["dynamics"].id,
+                        "educational_objective": "Netto-Kraft und Beschleunigung.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
+                        "answers": [
+                            {"text": "F = m · a", "is_correct": True},
+                            {"text": "F = m / a", "is_correct": False},
+                            {"text": "F = a / m", "is_correct": False},
+                            {"text": "F = m · v", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Ein Körper (m) erfährt konstante Kraft F. Was gilt für a?",
+                        "node_id": physics_nodes["dynamics"].id,
+                        "educational_objective": "Proportionalität a ∝ F, a ∝ 1/m.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "a = F/m", "is_correct": True},
+                            {"text": "a = m/F", "is_correct": False},
+                            {"text": "a = F·m", "is_correct": False},
+                            {"text": "a = F²/m", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Energy & Work — Conservation",
+                "author": teachers[0],
+                "graph_id": physics_graph.id,
+                "description": "Work–energy theorem and potential energy.",
+                "educational_objective": "Apply energy conservation in simple systems.",
+                "typical_learning_time": "PT25M",
+                "context": "higher education",
+                "language": "it",
+                "questions": [
+                    {
+                        "text": "Quale formula esprime l'energia cinetica?",
+                        "node_id": physics_nodes["energy"].id,
+                        "educational_objective": "Kinetic energy definition.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
+                        "answers": [
+                            {"text": "E_k = ½ m v²", "is_correct": True},
+                            {"text": "E_k = m g h", "is_correct": False},
+                            {"text": "E_k = F s", "is_correct": False},
+                            {"text": "E_k = m a", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Il lavoro netto su un corpo equivale a…",
+                        "node_id": physics_nodes["energy"].id,
+                        "educational_objective": "Work–energy theorem.",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT5M",
+                        "answers": [
+                            {"text": "variazione di energia cinetica", "is_correct": True},
+                            {"text": "variazione di massa", "is_correct": False},
+                            {"text": "variazione di impulso", "is_correct": False},
+                            {"text": "variazione di carica", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Hydrocarbons — Basics",
+                "author": teachers[0],
+                "graph_id": chemistry_graph.id,
+                "description": "Recognize formulas for simple hydrocarbons.",
+                "educational_objective": "Differentiate alkanes, alkenes, alkynes.",
+                "typical_learning_time": "PT20M",
+                "context": "other",
+                "language": "en",
+                "questions": [
+                    {
+                        "text": "Which is an alkane?",
+                        "node_id": chemistry_nodes["alkanes"].id,
+                        "educational_objective": "Classification by saturation.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
+                        "answers": [
+                            {"text": "C₃H₈", "is_correct": True},
+                            {"text": "C₂H₄", "is_correct": False},
+                            {"text": "C₂H₂", "is_correct": False},
+                            {"text": "CH₂O", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Select the correct formula for ethyne.",
+                        "node_id": chemistry_nodes["alkynes"].id,
+                        "educational_objective": "Triple bond recognition.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "C₂H₂", "is_correct": True},
+                            {"text": "C₂H₄", "is_correct": False},
+                            {"text": "C₂H₆", "is_correct": False},
+                            {"text": "C₃H₆", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Functional Groups — Alcohols & Aldehydes",
+                "author": teachers[0],
+                "graph_id": chemistry_graph.id,
+                "description": "Identify common functional groups and simple examples.",
+                "educational_objective": "Map formulas to functional group families.",
+                "typical_learning_time": "PT25M",
+                "context": "training",
+                "language": "de",
+                "questions": [
+                    {
+                        "text": "Welcher Stoff ist ein Alkohol?",
+                        "node_id": chemistry_nodes["alcohols"].id,
+                        "educational_objective": "OH-Gruppe erkennen.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "C₂H₅OH", "is_correct": True},
+                            {"text": "CH₃CHO", "is_correct": False},
+                            {"text": "C₂H₅CHO", "is_correct": False},
+                            {"text": "CH₃COOH", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Formaldehyd (Methanal) hat die Formel…",
+                        "node_id": chemistry_nodes["aldehydes"].id,
+                        "educational_objective": "Aldehyd-Grundformel.",
+                        "difficulty": "very easy",
+                        "typical_learning_time": "PT2M",
+                        "answers": [
+                            {"text": "CH₂O (oder HCHO)", "is_correct": True},
+                            {"text": "C₂H₅OH", "is_correct": False},
+                            {"text": "C₂H₅COOH", "is_correct": False},
+                            {"text": "C₂H₆", "is_correct": False}
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Carboxylic Acids, Esters & Ketones",
+                "author": teachers[0],
+                "graph_id": chemistry_graph.id,
+                "description": "Intro recognition of carboxylic acids, esters, and ketones.",
+                "educational_objective": "Relate functional groups to typical formulas.",
+                "typical_learning_time": "PT20M",
+                "context": "higher education",
+                "language": "it",
+                "questions": [
+                    {
+                        "text": "Qual è la formula generale di un acido carbossilico?",
+                        "node_id": chemistry_nodes["carboxylic"].id,
+                        "educational_objective": "RCOOH identification.",
+                        "difficulty": "medium",
+                        "typical_learning_time": "PT5M",
+                        "answers": [
+                            {"text": "R–COOH", "is_correct": True},
+                            {"text": "R–CHO", "is_correct": False},
+                            {"text": "R–COOR'", "is_correct": False},
+                            {"text": "R–OH", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Un estere ha tipicamente la forma…",
+                        "node_id": chemistry_nodes["esters"].id,
+                        "educational_objective": "Recognize ester linkage.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "R–COOR'", "is_correct": True},
+                            {"text": "R–COOH", "is_correct": False},
+                            {"text": "R–CHO", "is_correct": False},
+                            {"text": "R–OH", "is_correct": False}
+                        ]
+                    },
+                    {
+                        "text": "Un chetone semplice si può scrivere come…",
+                        "node_id": chemistry_nodes["ketones"].id,
+                        "educational_objective": "Carbonyl placement in ketones.",
+                        "difficulty": "easy",
+                        "typical_learning_time": "PT3M",
+                        "answers": [
+                            {"text": "R–CO–R'", "is_correct": True},
+                            {"text": "R–COOH", "is_correct": False},
+                            {"text": "R–O–R'", "is_correct": False},
+                            {"text": "R–CHO", "is_correct": False}
+                        ]
+                    }
+                ]
+            }
+        ]
+        tests_data+=additional_tests
 
         # Create tests and questions
         all_tests = []
