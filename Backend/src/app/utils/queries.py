@@ -253,6 +253,29 @@ test_from_teacher_by_context_query = """
     ORDER BY ?context
 """
 
+test_from_teacher_by_language_query = """
+    PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX kst:  <http://example.org/kst#>
+    PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+    
+    SELECT
+      ?language
+      (COUNT(DISTINCT ?test) AS ?testCount)
+    WHERE {{ 
+      # Find the teacher by email
+      ?teacher a kst:Teacher ;
+               foaf:mbox <mailto:{teacherEmail}> .
+    
+      # Find tests authored by the teacher
+      ?test a kst:Test ;
+            kst:hasAuthor ?teacher ;
+            dc:language ?language .
+    }}
+    GROUP BY ?language
+    ORDER BY DESC(?testCount)
+"""
+
 top_10_from_teacher_query = """
     PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -321,4 +344,49 @@ top_10_from_teacher_query = """
     HAVING (COUNT(?result) > 0)  # Ensure students have at least one result
     ORDER BY DESC(?avgScorePercent)
     LIMIT 10
+"""
+
+top_worst_fields_query = """
+    PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX kst:  <http://example.org/kst#>
+    PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+    PREFIX lom:  <http://ltsc.ieee.org/rdf/lom/>
+
+    
+    SELECT
+      ?node
+      ?nodeTitle
+      ?testTitle
+      ?difficulty
+      (COUNT(DISTINCT ?sa) AS ?incorrectAnswers)
+    WHERE {{ 
+      # Find the teacher by email
+      ?teacher a kst:Teacher ;
+               foaf:mbox <mailto:{teacherEmail}> .
+    
+      # Find tests authored by the teacher
+      ?test a kst:Test ;
+            kst:hasAuthor ?teacher ;
+            dc:title ?testTitle .
+    
+      # Find questions in those tests
+      ?question a kst:Question ;
+                kst:belongsToTest ?test ;
+                kst:mapsToNode ?node ;
+                lom:difficulty ?difficulty .
+    
+      # Get node title
+      ?node a kst:Node ;
+            dc:title ?nodeTitle .
+    
+      # Find incorrect student answers for those questions
+      ?sa a kst:StudentAnswer ;
+          kst:answersQuestion ?question ;
+          kst:selectedAnswer ?ans .
+      ?ans kst:isCorrect false .
+    }}
+    GROUP BY ?node ?nodeTitle ?testTitle ?difficulty
+    ORDER BY DESC(?incorrectAnswers)
+    LIMIT 9
 """

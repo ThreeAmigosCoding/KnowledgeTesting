@@ -10,6 +10,7 @@ export default function Navbar() {
     const handleTests = () => { navigate("/tests"); }
     const handleGraph = () => { navigate("/graph-drawing"); }
     const handleQueries = () => { navigate("/queries"); }
+    const handleDashboard = () => { navigate("/dashboard"); }
     const handleLogOut = () => {
         setUser(null);
         navigate("/login");
@@ -45,6 +46,16 @@ export default function Navbar() {
                     }}
                     onClick={() => handleQueries()}>
                     Queries
+                </Button>}
+
+                {user.role === "teacher" && <Button
+                    className='nav-bar-button'
+                    sx={{
+                        color: "primary.contrastText",
+                        fontSize: "medium"
+                    }}
+                    onClick={() => handleDashboard()}>
+                    Dashboard
                 </Button>}
 
                 {user.role === "student" && <Button

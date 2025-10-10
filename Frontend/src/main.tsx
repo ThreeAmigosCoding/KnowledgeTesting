@@ -14,6 +14,8 @@ import GraphsComparison from "./pages/graphs/graphs-comparison.tsx";
 import ResultsOverview from "./pages/results/results-overview.tsx";
 import ResultOverview from "./pages/results/result-overview.tsx";
 import QueriesOverview from "./pages/queries/queries-overview.tsx";
+import Dashboard from "./pages/teacher-dashboard/dashboard.tsx";
+
 
 
 const theme = createTheme({
@@ -112,7 +114,8 @@ const router = createBrowserRouter([
             { path:"/results", element: <ResultsOverview/> },
             { path:"/results/:testId", element: <ResultsOverview/> },
             { path:"/result/:id", element: <ResultOverview/> },
-            { path:"/queries", element: <QueriesOverview/> }
+            { path:"/queries", element: <QueriesOverview/> },
+            { path:"/dashboard", element: <Dashboard/>}
         ]
     }
 

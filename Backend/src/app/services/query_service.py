@@ -102,11 +102,29 @@ def get_teacher_tests_by_context(teacher_email):
         for result in results["results"]["bindings"]:
             item = {
                 "context": result.get("context", {}).get("value", None),
-                "testsCount": result.get("testsCount", {}).get("value", None),
+                "test_count": result.get("testsCount", {}).get("value", None),
             }
             output.append(item)
         return output
 
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
+
+def get_teacher_tests_by_language(teacher_email):
+    final_query = test_from_teacher_by_language_query.format(teacherEmail=teacher_email)
+    sparql.setQuery(final_query)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        results = sparql.query().convert()
+        output = []
+        for result in results["results"]["bindings"]:
+            item = {
+                "language": result.get("language", {}).get("value", None),
+                "test_count": result.get("testCount", {}).get("value", None),
+            }
+            output.append(item)
+        return output
     except Exception as e:
         return {"error": f"An error occurred: {str(e)}"}
 
@@ -177,3 +195,24 @@ def prerequisite_mastery(payload: dict):
     except Exception as e:
         return {"error": f"An error occurred: {str(e)}"}
     
+
+def get_top_worst_fields(teacher_email):
+    final_query = top_worst_fields_query.format(teacherEmail=teacher_email)
+    sparql.setQuery(final_query)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        results = sparql.query().convert()
+        output = []
+        for result in results["results"]["bindings"]:
+            item = {
+                "node" : result.get("node", {}).get("value", None),
+                "field" : result.get("nodeTitle", {}).get("value", None),
+                "test_title" : result.get("testTitle", {}).get("value", None),
+                "incorrect_answers" : result.get("incorrectAnswers", {}).get("value", None),
+                "difficulty" : result.get("difficulty", {}).get("value", None).capitalize(),
+            }
+            output.append(item)
+        return output
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
