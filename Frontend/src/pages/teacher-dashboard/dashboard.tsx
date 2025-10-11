@@ -1,11 +1,9 @@
 import "./dashboard.css"
 import {useUser} from "../../context/user-context.tsx";
 import {QueriesService} from "../../services/queries-service.ts";
-import React, {useEffect, useState} from "react";
-import {Cell, Legend, Pie, PieChart, ResponsiveContainer} from "recharts";
-import AverageScoresTable from "../../components/queries/average-scores-table.tsx";
+import {useEffect, useState} from "react";
+import {Cell, Pie, PieChart, ResponsiveContainer} from "recharts";
 import TopStudentsTable from "../../components/queries/top-10-students-table.tsx";
-import {forceManyBody} from "d3";
 import {Typography} from "@mui/material";
 import WorstFieldsTable from "../../components/queries/top-10-worst-fields-table.tsx";
 
@@ -158,19 +156,16 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
-
             <div className="table-container-wrapper">
                 <div className="table-container">
                     <Typography variant="h2">Top 10 teachers students</Typography>
                     <TopStudentsTable rows={Array.isArray(top10Students) ? top10Students : []} />
                 </div>
-
                 <div className="table-container">
                     <Typography variant="h2">Worst answered fields</Typography>
                     <WorstFieldsTable rows={Array.isArray(topWorstFields) ? topWorstFields : []} />
                 </div>
             </div>
-
         </div>
     );
 }

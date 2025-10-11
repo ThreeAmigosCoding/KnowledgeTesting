@@ -1,7 +1,7 @@
 .main-dashboard-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
     height: 90vh;
     overflow: hidden;
     padding: 12px;
@@ -11,12 +11,13 @@
 
 .pie-chart-container {
     border-radius: 12px;
-    padding: 12px 10px;
+    padding: 10px;
     min-height: 250px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
     flex: 1;
 }
 
@@ -34,13 +35,25 @@
     flex-direction: row;
     width: 100%;
     justify-content: center;
-    overflow: hidden;
+    overflow: auto;
 
 }
 
 .table-container{
     flex: 1;
-    padding-bottom: 100px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+}
+
+.MuiTableBody-root tr {
+    height: 48px;
+}
+
+.table-container::-webkit-scrollbar, .test-create-panel::-webkit-scrollbar {
+    padding-right: 50px;
 }
 
 

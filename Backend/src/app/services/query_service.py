@@ -216,3 +216,45 @@ def get_top_worst_fields(teacher_email):
         return output
     except Exception as e:
         return {"error": f"An error occurred: {str(e)}"}
+
+
+def difficulty_performance_analysis(payload: dict):
+    first_name = payload.get("first_name")
+    last_name = payload.get("last_name")
+    graph_title = payload.get("graph_title")
+
+    filters = []
+
+    if first_name:
+        filters.append(f'FILTER(LCASE(?firstName) = LCASE("{first_name}"))')
+    if last_name:
+        filters.append(f'FILTER(LCASE(?lastName) = LCASE("{last_name}"))')
+    if graph_title:
+        filters.append(f'FILTER(LCASE(?graphTitle) = LCASE("{graph_title}"))')
+
+    filter_clause = " ".join(filters) if filters else ""
+    final_query = difficulty_performance_analysis_query.format(filters=filter_clause)
+
+    sparql.setQuery(final_query)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        results = sparql.query().convert()
+        output = []
+        for result in results["results"]["bindings"]:
+            item = {
+                "first_name": result.get("firstName", {}).get("value", None),
+                "last_name": result.get("lastName", {}).get("value", None),
+                "graph_title": result.get("graphTitle", {}).get("value", None),
+                "very_easy_performance": result.get("veryEasyPerformance", {}).get("value", None),
+                "easy_performance": result.get("easyPerformance", {}).get("value", None),
+                "medium_performance": result.get("mediumPerformance", {}).get("value", None),
+                "difficult_performance": result.get("difficultPerformance", {}).get("value", None),
+                "tests_taken": result.get("testsTaken", {}).get("value", None)
+            }
+            output.append(item)
+
+        return output
+
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}

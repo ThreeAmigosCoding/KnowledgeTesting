@@ -24,6 +24,7 @@ export type QueryParameter = {
 export type QueryDefinition = {
     id: string;
     name: string;
+    description: string;
     parameters: QueryParameter[];
 };
 
@@ -36,7 +37,7 @@ type Props = QueryDefinition & {
 const toTitle = (s: string) =>
     s.replace(/[-_]/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 
-const QueryCard: React.FC<Props> = ({ id, name, parameters, onExecute }) => {
+const QueryCard: React.FC<Props> = ({ id, name, description, parameters, onExecute }) => {
     const [values, setValues] = useState<QueryParameterValueMap>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
     const [submitting, setSubmitting] = useState(false);
@@ -112,6 +113,9 @@ const QueryCard: React.FC<Props> = ({ id, name, parameters, onExecute }) => {
                 <Box mb={2}>
                     <Typography variant="h6" fontWeight={700}>
                         {name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {description}
                     </Typography>
                 </Box>
 

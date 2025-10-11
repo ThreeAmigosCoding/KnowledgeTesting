@@ -11,6 +11,8 @@ export class QueriesService {
                 return this.problematicTopics(params)
             case "prerequisite-mastery":
                 return this.prerequisiteMastery(params)
+            case "difficulty-performance-analysis":
+                return this.difficultyPerformanceAnalysis(params);
             default:
                 throw new Error(`No service method registered for id "${id}".`);
         }
@@ -78,6 +80,28 @@ export class QueriesService {
             }
         } catch (error: any) {
             console.error("Error fetching average scores:", error);
+            throw error;
+        }
+    }
+
+    private async difficultyPerformanceAnalysis(params: QueryParams) {
+        try {
+            const cleanParams: Record<string, any> = {};
+            for (const [key, value] of Object.entries(params)) {
+                if (value !== undefined && value !== "") {
+                    cleanParams[key] = value;
+                }
+            }
+
+            const response = await api.post("queries/difficulty-performance-analysis", cleanParams);
+
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Unexpected status ${response.status}`);
+            }
+        } catch (error: any) {
+            console.error("Error fetching difficulty performance analysis:", error);
             throw error;
         }
     }

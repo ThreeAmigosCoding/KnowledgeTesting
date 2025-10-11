@@ -124,6 +124,10 @@ def problematic_topics():
 def prerequisite_mastery():
     return query_service.prerequisite_mastery(request.json)
 
+@main.route('/queries/difficulty-performance-analysis', methods=['POST'])
+def difficulty_performance_analysis():
+    return query_service.difficulty_performance_analysis(request.json)
+
 @main.route('/queries/test-count-by-context/<mail>', methods=['GET'])
 def test_count_by_context(mail):
     return query_service.get_teacher_tests_by_context(mail)

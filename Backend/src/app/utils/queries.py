@@ -388,5 +388,162 @@ top_worst_fields_query = """
     }}
     GROUP BY ?node ?nodeTitle ?testTitle ?difficulty
     ORDER BY DESC(?incorrectAnswers)
-    LIMIT 9
+    LIMIT 10
+"""
+
+difficulty_performance_analysis_query = """
+    PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX kst:  <http://example.org/kst#>
+    PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX lom:  <http://ltsc.ieee.org/rdf/lom/>
+    PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+    
+    SELECT ?graphTitle
+           ?firstName
+           ?lastName
+           ?veryEasyPerf as ?veryEasyPerformance
+           ?easyPerf as ?easyPerformance
+           ?mediumPerf as ?mediumPerformance
+           ?difficultPerf as ?difficultPerformance
+           ?testsTaken
+    WHERE {{
+      # Get all students who took tests
+      {{
+        SELECT ?student ?firstName ?lastName ?graphTitle (COUNT(DISTINCT ?result) as ?testsTaken)
+        WHERE {{
+          ?student a kst:Student ;
+                   foaf:firstName ?firstName ;
+                   foaf:lastName ?lastName .
+          
+          ?result a kst:TestResult ;
+                  kst:belongsToStudent ?student ;
+                  kst:forTest ?test .
+          
+          ?test kst:usesGraph ?graph .
+          ?graph dc:title ?graphTitle .
+          
+          {filters}
+        }}
+        GROUP BY ?student ?firstName ?lastName ?graphTitle
+      }}
+      
+      # Calculate very easy performance (only if questions exist)
+      OPTIONAL {{
+        SELECT ?student ?graphTitle 
+               (ROUND((SUM(?correct) * 100.0) / SUM(?total)) as ?veryEasyPerf)
+        WHERE {{
+          ?student a kst:Student .
+          ?result a kst:TestResult ;
+                  kst:belongsToStudent ?student ;
+                  kst:forTest ?test .
+          ?test kst:usesGraph ?graph .
+          ?graph dc:title ?graphTitle .
+          
+          ?question a kst:Question ;
+                    kst:belongsToTest ?test ;
+                    lom:difficulty "very easy" .
+          
+          ?studentAnswer a kst:StudentAnswer ;
+                         kst:belongsToResult ?result ;
+                         kst:answersQuestion ?question ;
+                         kst:selectedAnswer ?answer .
+          
+          ?answer kst:isCorrect ?isCorrect .
+          BIND(1 as ?total)
+          BIND(IF(?isCorrect, 1, 0) as ?correct)
+        }}
+        GROUP BY ?student ?graphTitle
+        HAVING (SUM(?total) > 0)
+      }}
+      
+      # Calculate easy performance (only if questions exist)
+      OPTIONAL {{
+        SELECT ?student ?graphTitle 
+               (ROUND((SUM(?correct) * 100.0) / SUM(?total)) as ?easyPerf)
+        WHERE {{
+          ?student a kst:Student .
+          ?result a kst:TestResult ;
+                  kst:belongsToStudent ?student ;
+                  kst:forTest ?test .
+          ?test kst:usesGraph ?graph .
+          ?graph dc:title ?graphTitle .
+          
+          ?question a kst:Question ;
+                    kst:belongsToTest ?test ;
+                    lom:difficulty "easy" .
+          
+          ?studentAnswer a kst:StudentAnswer ;
+                         kst:belongsToResult ?result ;
+                         kst:answersQuestion ?question ;
+                         kst:selectedAnswer ?answer .
+          
+          ?answer kst:isCorrect ?isCorrect .
+          BIND(1 as ?total)
+          BIND(IF(?isCorrect, 1, 0) as ?correct)
+        }}
+        GROUP BY ?student ?graphTitle
+        HAVING (SUM(?total) > 0)
+      }}
+      
+      # Calculate medium performance (only if questions exist)
+      OPTIONAL {{
+        SELECT ?student ?graphTitle 
+               (ROUND((SUM(?correct) * 100.0) / SUM(?total)) as ?mediumPerf)
+        WHERE {{
+          ?student a kst:Student .
+          ?result a kst:TestResult ;
+                  kst:belongsToStudent ?student ;
+                  kst:forTest ?test .
+          ?test kst:usesGraph ?graph .
+          ?graph dc:title ?graphTitle .
+          
+          ?question a kst:Question ;
+                    kst:belongsToTest ?test ;
+                    lom:difficulty "medium" .
+          
+          ?studentAnswer a kst:StudentAnswer ;
+                         kst:belongsToResult ?result ;
+                         kst:answersQuestion ?question ;
+                         kst:selectedAnswer ?answer .
+          
+          ?answer kst:isCorrect ?isCorrect .
+          BIND(1 as ?total)
+          BIND(IF(?isCorrect, 1, 0) as ?correct)
+        }}
+        GROUP BY ?student ?graphTitle
+        HAVING (SUM(?total) > 0)
+      }}
+      
+      # Calculate difficult performance (only if questions exist)
+      OPTIONAL {{
+        SELECT ?student ?graphTitle 
+               (ROUND((SUM(?correct) * 100.0) / SUM(?total)) as ?difficultPerf)
+        WHERE {{
+          ?student a kst:Student .
+          ?result a kst:TestResult ;
+                  kst:belongsToStudent ?student ;
+                  kst:forTest ?test .
+          ?test kst:usesGraph ?graph .
+          ?graph dc:title ?graphTitle .
+          
+          ?question a kst:Question ;
+                    kst:belongsToTest ?test ;
+                    lom:difficulty "difficult" .
+          
+          ?studentAnswer a kst:StudentAnswer ;
+                         kst:belongsToResult ?result ;
+                         kst:answersQuestion ?question ;
+                         kst:selectedAnswer ?answer .
+          
+          ?answer kst:isCorrect ?isCorrect .
+          BIND(1 as ?total)
+          BIND(IF(?isCorrect, 1, 0) as ?correct)
+        }}
+        GROUP BY ?student ?graphTitle
+        HAVING (SUM(?total) > 0)
+      }}
+      
+    }}
+    ORDER BY ?graphTitle ?lastName ?firstName
 """
